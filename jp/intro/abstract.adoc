@@ -1,0 +1,23 @@
+== Kubernetes インストールの概要
+
+=== インストール手順
+
+インストール手順として以下の3種類があります。
+
+. 手動インストール: https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadm] を使用した手動インストール
+** 本手順は参考として提示しています。通常は `k8s-installer` インストーラを使った自動インストールを使用してください。
+. スクリプトインストーラ: shスクリプトベースのインストーラを使用した自動インストール
+** スタンドアロン・シングルマスター構成をサポートします。
+** 本インストーラは簡易版なので、HA構成を含む本番環境にインストールする場合は Ansible インストーラを推奨します。
+. Ansibleインストーラ: Ansibleを使用したクラスタ一括での自動インストール
+
+また、スクリプトインストーラ・Ansibleインストーラでは、オフラインインストールにも対応しています。
+オフラインインストールでは、Internetに接続されたマシンでインストールに必要なファイルをすべて取得しておき、
+これをUSBメモリ・ハードディスクなどを使用してインストール先の環境に転送してインストールします。
+
+=== インストーラ
+
+スクリプトインストーラ・Ansibleインストーラは、 https://github.com/k8s-installer/k8s-installer[k8s-installer]
+に含まれています。
+
+https://github.com/k8s-installer/k8s-installer からダウンロードしてください。

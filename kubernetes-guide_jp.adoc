@@ -1,0 +1,55 @@
+= Kubernetes 構築ガイド: 0.1版
+:icons: font
+:encoding: utf-8
+:lang: ja
+:toc: left
+:toc-title: 目次
+:toclevels: 4
+:numbered:
+:doctype: book
+//:source-highlighter: pretty
+:source-highlighter: prettify
+:xrefstyle: full
+
+:sectnums!:
+include::jp/changes.adoc[]
+
+:sectnums:
+:sectnumlevels: 4
+
+== はじめに
+
+// 本書の位置づけ・イントロ
+include::jp/intro/intro.adoc[]
+
+// 用語集
+include::jp/intro/glossary.adoc[]
+
+// 必要環境
+include::jp/intro/requirements.adoc[]
+
+// インストールの概要
+include::jp/intro/abstract.adoc[]
+
+// 手動インストール
+include::jp/manual/install-common.adoc[]
+include::jp/manual/install-single.adoc[]
+
+// スクリプトベースインストーラ
+include::jp/script-install/install-single.adoc[]
+
+// Ansibleインストーラ
+include::jp/ansible/ansible.adoc[]
+
+// オフラインインストール
+include::jp/offline/offline.adoc[]
+
+// ストレージのセットアップ
+// TODO:
+
+// レジストリのセットアップ
+// TODO:
+
+// アップグレード
+include::jp/upgrade/upgrade.adoc[]
+

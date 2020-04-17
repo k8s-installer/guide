@@ -1,0 +1,35 @@
+== クラスタのアップグレード
+
+Kubernetes クラスタのアップグレード手順を説明します。
+
+=== 注意事項
+
+Kubernetes クラスタは一度にバージョン 0.1 ずつしかアップグレードできません。
+
+詳細は https://kubernetes.io/ja/docs/setup/release/version-skew-policy/[Kubernetesバージョンとバージョンスキューサポートポリシー]
+を参照してください。
+
+=== Ansibleインストーラ
+
+Ansibleインストーラを使用している場合、自動でアップグレードを行うことができます。
+
+==== オフラインインストール準備
+
+オフラインインストールを使用している場合は、事前にオフラインインストールファイルの取得・展開が必要です。
+
+==== バージョン設定
+
+inventory/group_vars/all/version.yml の以下の値を変更してください。
+
+* kube_version: Kubernetes のバージョン
+* kubeadm_version, kubelet_version, kubectl_version: kubeadm, kubelet, kubectl のバージョン (RPMバージョン)
+
+==== アップグレードの実行
+
+以下手順でマスターノードをアップグレードしてください。
+
+    $ ansible-playbook -i inventory/hosts upgrade-master.yml
+
+以下手順でワーカーノードをアップグレードしてください。
+
+    $ ansible-playbook -i inventory/hosts upgrade-worker.yml

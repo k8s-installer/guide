@@ -1,0 +1,91 @@
+== Ansibleインストーラ
+
+Ansible ベースインストーラを使用してインストールする手順を説明します。
+
+Ansibleインストーラを使う場合は、インストール作業は Ansible をインストールした任意のマシンで実施します。
+(マスターノード上で実行しても構いません)。
+以下、本マシンを Ansibleマシンと呼びます。
+
+=== 必要環境
+
+Ansible マシンに Ansible 2.7 以上をインストールする必要があります。
+
+    $ pip install ansible
+
+全マスターノード・ワーカーノードに対して、以下の条件が必要です。
+
+* Ansibleマシンから各ノードに対して ssh 接続が可能であること。
+** sshログインはパスワード認証ではなく鍵認証ができるようにすることを推奨します。
+* Ansibleマシン上の作業ユーザと同名のユーザが全ノード上に存在しており、sudo を実行可能であること。
+** 作業ユーザとして root は使用できません。一般ユーザを作成してそのユーザで作業してください。
+
+=== 設定
+
+Ansible マシンに上記作業ユーザでログインします。
+インストーラを展開し、以下作業を行います。
+
+==== インベントリ
+
+インベントリファイル `inventory/hosts` ファイルにインストール先のノードの情報を設定してください。サンプルは `sample/hosts` ファイルにあります。
+
+グループが以下3つありますので、適切なグループにマシンを定義してください。
+
+* master_first: マスタノードを指定してください。ここに登録できるマシンは1台だけです。
+* master_secondary: HA構成を取る場合に2台目以降のマスタノードを指定してください。
+* worker: ワーカーノードを指定してください。
+
+シングルマスター構成の場合は master_first, worker のみ設定してください (master_secondary　は空にしてください)
+
+HA構成の場合はマスターノードが3台必要です。
+最初の1台をmaster_first に、残りの2台を master_secondary に指定してください。
+
+マシンの指定方法の例を示します。
+
+    hostname ansible_host=10.0.1.10 ip=10.0.1.10
+
+* hostname: ここに指定した文字列がそのまま Kubernetes のノード名となります。
+* ansible_host: ssh でログイン可能なホスト名・IPアドレスを指定します。
+** ホスト名と同一の場合は省略可能です。
+* ip: kube-apiserver および kubelet で使用(広告)する IP アドレスを指定します。
+** 省略した場合は、デフォルトゲートウェイに指定されたインタフェースのIPアドレスが使用されます。
+
+==== 変数設定
+
+sample/group_vars/all/*.yml ファイルを inventory/group_vars/all/ ディレクトリにコピーし、適宜編集してください。
+
+* all.yml
+** lb_apiserver_address: HA構成の場合、ロードバランサの FQDN名またはIPアドレスを設定してください。
+** pod_subnet: Podサブネット(CIDR)を指定してください。
+* offline.yml
+** offline_install: オフラインインストールをする場合は yes に設定してください。(後述)
+* proxy.yml
+** Internet 接続にプロキシを経由する必要がある場合は、proxy_url, proxy_noproxy を設定してください。
+* version.yml
+** インストールする Kubernetes バージョンを適宜指定します。無指定の場合はデフォルト値が使用されます。
+
+NOTE: プロキシを使用する場合、proxy_noproxy には必ず kube-apiserver の IPアドレスまたはDNS名を指定しなければなりません。
+シングルホストの場合はマスターノードの、HA構成の場合はロードバランサの値を指定してください。
+これが適切に設定されていないとマスターノードのインストールが失敗します。
+
+=== インストール
+
+以下手順でインストールを行ってください。
+
+    $ ansible-playbook -i inventory/hosts site.yml
+
+* ssh ログイン時にパスワードまたはパスフレーズが必要な場合は -k (--ask-pass) オプションを付与してください。
+* ログイン先マシンで `sudo` パスワードが必要な場合は -K (--ask-become-pass) オプションを付与してください。
+
+以下の playbook が順次実行されます。
+
+* common.yml: Docker/Kubeadm インストール、オフラインリポジトリ設定、Proxy設定など、全マシン共通のインストールが実行されます。
+* master-first.yml: 1台目のマスタノードへの Kubernetes デプロイが実行されます。
+* master-secondary.yml: 2台目以降のマスタノードへの Kubernetes デプロイが実行されます。
+* worker.yml: ワーカーノードへの Kubernetes デプロイが実行されます。
+* apps.yml: アプリケーション類のデプロイが実行されます。
+
+=== インストール後の確認
+
+マスターノード上で `kubectl get nodes` を実行し、全ノードが追加されていて Ready になっていることを確認してください。
+
+また、`kubectl get all -n kube-system` を実行し、Podがすべて正常に起動していることを確認してください。

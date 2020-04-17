@@ -1,0 +1,85 @@
+=== シングルマスター構成インストール
+
+シングルマスター構成のインストール手順を示します。
+
+==== マスターノードインストール
+
+マスターノードに Kubernetes コントロールプレーンをインストールします。
+
+----
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+----
+
+ここでは Pod を動作させるネットワークアドレス(CIDR)として 192.168.0.0/16 を使用しています。
+使用中のアドレスと衝突している場合は、適宜変更が必要です。
+
+インストールは数分で完了します。画面には以下のようなログが表示されるはずです。
+
+----
+...
+[bootstraptoken] creating the "cluster-info" ConfigMap in the "kube-public" namespace
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a Pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  /docs/concepts/cluster-administration/addons/
+
+You can now join any number of machines by running the following on each node
+as root:
+
+  kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+----
+
+上記の末尾に表示される `kubadm join...` の表示は保存(ファイルに保存するなど)してください。
+`kubeadm join` 手順はワーカーノードが Kubernetes クラスタに参加する際に必要になります。
+
+上記手順に従い、~/.kube/config を作成してください。
+
+----
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+----
+
+以下手順で Kubernetes クラスタに正常に接続できることを確認してください。
+
+----
+kubectl cluster-info
+----
+
+==== ネットワークアドオン
+
+Podネットワークアドオンをインストールします。本手順書では、 https://www.projectcalico.org/[Calico] を採用しています。
+
+以下手順で Calico をインストールしてください。
+
+ kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+
+==== スケジューリング設定
+
+スタンドアロン構成の場合のみ、マスターノードをスケジュール可能に変更します。
+これを実施しないと、マスターノード上でワークロードを実行できません。
+
+ kubectl taint nodes --all node-role.kubernetes.io/master-
+
+=== ワーカーノード追加
+
+各ワーカーノードで以下を実行し、ワーカーノードを Kubernetes クラスタに接続します。
+
+ kubeadm join --token <token> <control-plane-host>:<control-plane-port> --discovery-token-ca-cert-hash sha256:<hash>
+
+ここで `kubeadm join` に指定する引数は、マスターノードのインストール時に表示された内容をそのまま利用してください。
+
+`kubeadm join` の内容を忘れてしまった場合、あるいは24時間以上経過して token が無効になってしまった場合は、
+マスターノード上で以下手順を実行することで token の再生成と `kubeadm join` コマンド再取得が可能です。
+
+ kubeadm token create --print-join-command

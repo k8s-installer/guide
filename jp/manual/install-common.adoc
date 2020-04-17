@@ -1,0 +1,140 @@
+== 手動インストール手順
+
+本章では手動で Kubernetes をインストールする手順ついて説明します。
+
+なお、本項目の手順は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadmのインストール]
+手順に準じています。
+
+NOTE: 通常はインストーラを使用して自動インストールを行ってください。
+インストーラはここに示す手順を自動的に実行するようになっています。
+
+=== 共通手順
+
+Kubernetes のインストールに先立ち実施が必要な共通手順を説明します。
+本手順はどの構成を使用する場合であっても全マシンについて実施する必要があります。
+
+NOTE: 本手順はすべて root 権限で実行する必要があります。`sudo bash` してから実行するなどしてください。
+
+==== Proxy 設定
+
+インターネット接続に Proxy サーバ経由が必要な場合は、以下の手順が必要です。
+
+===== Yum
+
+/etc/yum.conf に以下の一行を追加してください。
+
+ proxy={PROXY_URL}
+
+{PROXY_URL} には、プロキシサーバのURLを `http://[proxy_hostname]:[proxy_port]` 形式で指定してください。
+
+===== Docker
+
+/etc/systemd/system/docker.service.d/http-proxy.conf を以下の手順で作成してください。
+
+----
+mkdir -p /etc/systemd/system/docker.service.d
+
+cat <<EOF > /etc/systemd/system/docker.service.d/http-proxy.conf
+[Service]
+Environment="HTTP_PROXY={PROXY_URL}" "HTTPS_PROXY={PROXY_URL}" "NO_PROXY=127.0.0.1,localhost"
+EOF
+----
+
+==== ファイヤウォール
+
+ファイヤウォールについては、無効化するか、以下に示すInbound TCPポートをすべて開放する必要があります。
+開放するポートの詳細は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[必須ポートの確認]
+を参照してください。
+
+* マスターノード
+** 6443
+** 2379-2380
+** 10250-10252
+* ワーカーノード
+** 10250
+** 30000-32767
+
+開放する手順は以下の通りです。
+
+----
+# for master node
+firewall-cmd --add-port=6443/tcp --permanent
+firewall-cmd --add-port=2379-2380/tcp --permanent
+firewall-cmd --add-port=10250-10252/tcp --permanent
+firewall-cmd --reload
+
+# for worker-node
+firewall-cmd --add-port=10250tcp --permanent
+firewall-cmd --add-port=30000-32767/tcp --permanent
+firewall-cmd --reload
+----
+
+==== Docker コンテナランタイムのインストール
+
+コンテナランタイムとして、RHEL7/CentOS7標準の Docker を使用します。
+
+RHEL7 の場合は、rhel-7-server-extra-rpms リポジトリを有効にしてください。
+
+ subscription-manager repos --enable=rhel-7-server-extras-rpms
+
+以下手順で docker をインストール・起動してください。
+
+ yum install -y docker
+ systemctl enable --now docker
+
+==== SELinux の無効化
+
+SELinux を無効化してください。
+
+ setenforce 0
+ sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
+
+==== Swap の無効化
+
+Swap が無効化されていない場合は無効化してください。
+
+ sudo swapoff -a
+
+また /etc/fstab を確認し、swap 設定が存在する場合はその行を無効化してください。
+以下に手順例を示します。
+
+ sed -i 's/^\([^#].* swap .*\)$/#\1/' /etc/fstab
+
+==== sysconfig 設定変更
+
+ネットワークをブリッジできるよう、sysctl の設定を変更します。
+
+----
+cat <<EOF > /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sysctl --system
+----
+
+==== kubeadm / kubelet / kubectl インストール
+
+kubeadm / kubelet / kubectl を以下手順でインストールし、kubelet を起動してください。
+
+----
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
+yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+
+systemctl enable --now kubelet
+----
+
+kubeadm / kubelet / kubectl が更新されないよう、バージョンロックを掛けてください。
+
+----
+yum install yum-plugin-versionlock
+yum versionlock add kubeadm kubelet kubectl
+----
