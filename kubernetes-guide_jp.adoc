@@ -53,3 +53,7 @@ include::jp/offline/offline.adoc[]
 // アップグレード
 include::jp/upgrade/upgrade.adoc[]
 
+// 運用
+== 運用
+
+include::jp/ops/rotate-certs.adoc[]

@@ -1,0 +1,39 @@
+=== 証明書の更新
+
+Kubernetes のサーバ証明書・クライアント証明書は有効期限が1年となっているため、
+定期的に証明書の更新を行わなければなりません。
+
+詳細は https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/[Certificate Management with kubeadm] を参照してください。
+
+==== 証明書の自動更新
+
+Kubernetes のアップグレードを行った際に、kubeadm が自動的に証明書を更新するようになっています。
+Kubernetes は数ヶ月に1度マイナーバージョンアップされるため、
+これに合わせて定期的にアップグレードを行えば証明書期限が切れることはありません。
+(これがセキュリティを維持するためのベストプラクティスです)
+
+==== 証明書有効期限の確認
+
+各マスターノードで以下手順を実行することで有効期限を確認できます。
+
+    $ sudo kubeadm alpha certs check-expiration
+
+==== 証明書の手動更新
+
+以下手順で証明書を手動更新することができます。
+
+===== Ansible インストーラを使用している場合
+
+`renew-server-certs` playbook を使用して、全マスターノードの証明書を手動更新できます。
+全証明書が有効期限1年で再生成されます。
+
+    $ ansible-playbook -i inventory/hosts renew-server-certs.yml
+
+===== スクリプトインストーラを使用している場合
+
+全マスターノード上で、それぞれ以下手順を実行してください。
+
+    $ sudo kubeadm alpha certs renew all
+    $ sudo /bin/rm /var/lib/kubelet/kubelet.crt
+    $ sudo /bin/rm /var/lib/kubelet/kubelet.key
+    $ sudo systemctl restart kubelet
