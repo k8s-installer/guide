@@ -8,16 +8,28 @@ Ansibleインストーラを使う場合は、インストール作業は Ansibl
 
 === 必要環境
 
-Ansible マシンに Ansible 2.7 以上をインストールする必要があります。
+Ansible マシンに Python3 / pip および Ansible 2.9 以上をインストールする必要があります。
 
-    $ pip install ansible
+https://docs.python.org/ja/3/library/venv.html[venv] を使用することを推奨します。
+venv のセットアップ例を示します。
+
+    $ sudo yum install python3 python3-pip
+    $ python3 -m venv $HOME/venv
+    $ . $HOME/venv/bin/activate
+
+以下手順で Ansible をインストールしてください。
+
+    $ pip3 install -U -r requirements.txt
+
+オフライン環境の Ansible マシンに Ansible をインストールする必要がある場合は
+https://github.com/tmurakam/python-offline-env[python-offline-env] を使用してください。
 
 全マスターノード・ワーカーノードに対して、以下の条件が必要です。
 
-* Ansibleマシンから各ノードに対して ssh 接続が可能であること。
-** sshログインはパスワード認証ではなく鍵認証ができるようにすることを推奨します。
-* Ansibleマシン上の作業ユーザと同名のユーザが全ノード上に存在しており、sudo を実行可能であること。
-** 作業ユーザとして root は使用できません。一般ユーザを作成してそのユーザで作業してください。
+* Ansibleマシンから各ノードに対して鍵認証で ssh 接続が可能であること。
+** ログインユーザとして　root は使用しないでください。
+** ログインするユーザ名は全マシンで同一にすることを推奨します。
+* Ansibleマシンから各ノードに対して ssh ログインしたあと、sudo を実行可能であること。
 
 === 設定
 
@@ -41,13 +53,15 @@ HA構成の場合はマスターノードが3台必要です。
 
 マシンの指定方法の例を示します。
 
-    hostname ansible_host=10.0.1.10 ip=10.0.1.10
+    host1 ansible_user=johndoe ansible_host=10.0.1.10 ip=10.0.1.10
 
 * hostname: ここに指定した文字列がそのまま Kubernetes のノード名となります。
-* ansible_host: ssh でログイン可能なホスト名・IPアドレスを指定します。
+* ansible_user: sshログインするユーザ名を指定します。
+** Ansibleマシン上のユーザと同一ユーザ名の場合は省略可能です。
+* ansible_host: ssh で接続する際に使用するホスト名またはIPアドレスを指定します。
 ** ホスト名と同一の場合は省略可能です。
 * ip: kube-apiserver および kubelet で使用(広告)する IP アドレスを指定します。
-** 省略した場合は、デフォルトゲートウェイに指定されたインタフェースのIPアドレスが使用されます。
+** 省略した場合は、リモートマシンのデフォルトゲートウェイに指定されたインタフェースのIPアドレスが使用されます。
 
 ==== 変数設定
 
