@@ -6,30 +6,46 @@ Ansibleインストーラを使う場合は、インストール作業は Ansibl
 (マスターノード上で実行しても構いません)。
 以下、本マシンを Ansibleマシンと呼びます。
 
+本手順は `k8s-installer` の ansible ディレクトリで作業してください。
+
 === 必要環境
 
-Ansible マシンに Python3 / pip および Ansible 2.9 以上をインストールする必要があります。
-
-https://docs.python.org/ja/3/library/venv.html[venv] を使用することを推奨します。
-venv のセットアップ例を示します。
-
-    $ sudo yum install python3 python3-pip
-    $ python3 -m venv $HOME/venv
-    $ . $HOME/venv/bin/activate
-
-以下手順で Ansible をインストールしてください。
-
-    $ pip3 install -U -r requirements.txt
-
-オフライン環境の Ansible マシンに Ansible をインストールする必要がある場合は
-https://github.com/tmurakam/python-offline-env[python-offline-env] を使用してください。
+Ansible マシンに Ansible 2.9 以上をインストールする必要があります。
 
 全マスターノード・ワーカーノードに対して、以下の条件が必要です。
 
 * Ansibleマシンから各ノードに対して鍵認証で ssh 接続が可能であること。
 ** ログインユーザとして　root は使用しないでください。
 ** ログインするユーザ名は全マシンで同一にすることを推奨します。
-* Ansibleマシンから各ノードに対して ssh ログインしたあと、sudo を実行可能であること。
+* Ansibleマシンから各ノードに対して ssh ログインしたあと、ログインユーザで sudo を実行可能であること。
+
+==== Ansible のインストール手順
+
+Python 仮想環境を作成してください。
+Python 2 + https://virtualenv.pypa.io/en/latest/[virtualenv] または
+Python 3 + https://docs.python.org/ja/3/library/venv.html[venv] を使用します。
+
+Python2 + virtualenv の場合の仮想環境作成例を示します。
+
+    $ sudo yum install python-virtualenv
+    $ virtualenv $HOME/venv
+
+Python 3 + venv の場合の仮想環境作成例を示します。
+
+    $ sudo subscription-manager repos --enable rhel-7-server-optional-rpms  # RHEL7の場合
+    $ sudo yum install python3 python3-pip gcc openssl-devel python3-devel
+    $ python3 -m venv $HOME/venv
+
+以下手順で仮想環境を activate します。
+
+    $ . $HOME/venv/bin/activate
+
+以下手順で Ansible をインストールしてください。
+
+    $ pip install -U -r requirements.txt
+
+オフライン環境の Ansible マシンに Ansible をインストールする必要がある場合は
+https://github.com/tmurakam/python-offline-env[python-offline-env] を使用してください。
 
 === 設定
 
@@ -38,7 +54,7 @@ Ansible マシンに上記作業ユーザでログインします。
 
 ==== インベントリ
 
-インベントリファイル `inventory/hosts` ファイルにインストール先のノードの情報を設定してください。サンプルは `sample/hosts` ファイルにあります。
+`sample/hosts` ファイルを `inventory/hosts` ファイルにコピーし、インストール先のノードの情報を設定してください。
 
 グループが以下3つありますので、適切なグループにマシンを定義してください。
 
@@ -53,10 +69,10 @@ HA構成の場合はマスターノードが3台必要です。
 
 マシンの指定方法の例を示します。
 
-    host1 ansible_user=johndoe ansible_host=10.0.1.10 ip=10.0.1.10
+    hostname ansible_user=johndoe ansible_host=10.0.1.10 ip=10.0.1.10
 
 * hostname: ここに指定した文字列がそのまま Kubernetes のノード名となります。
-* ansible_user: sshログインするユーザ名を指定します。
+* ansible_user: ssh ログインする際に使用するターゲットマシン上のユーザ名を指定します。
 ** Ansibleマシン上のユーザと同一ユーザ名の場合は省略可能です。
 * ansible_host: ssh で接続する際に使用するホスト名またはIPアドレスを指定します。
 ** ホスト名と同一の場合は省略可能です。
@@ -69,13 +85,13 @@ sample/group_vars/all/*.yml ファイルを inventory/group_vars/all/ ディレ�
 
 * all.yml
 ** lb_apiserver_address: HA構成の場合、ロードバランサの FQDN名またはIPアドレスを設定してください。
-** pod_subnet: Podサブネット(CIDR)を指定してください。
+** pod_subnet: Podサブネット(CIDR)を指定してください。通常は変更不要ですが、IPアドレスが既存アドレスと衝突する場合は変更が必要です。
 * offline.yml
 ** offline_install: オフラインインストールをする場合は yes に設定してください。(後述)
 * proxy.yml
 ** Internet 接続にプロキシを経由する必要がある場合は、proxy_url, proxy_noproxy を設定してください。
 * version.yml
-** インストールする Kubernetes バージョンを適宜指定します。無指定の場合はデフォルト値が使用されます。
+** インストールする Kubernetes バージョンを適宜指定します。無指定の場合は `k8s-installer` のデフォルト値が使用されます。
 
 NOTE: プロキシを使用する場合、proxy_noproxy には必ず kube-apiserver の IPアドレスまたはDNS名を指定しなければなりません。
 シングルホストの場合はマスターノードの、HA構成の場合はロードバランサの値を指定してください。
