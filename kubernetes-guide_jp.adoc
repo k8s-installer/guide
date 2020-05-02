@@ -47,8 +47,8 @@ include::jp/offline/offline.adoc[]
 // ストレージ
 include::jp/storage/index.adoc[]
 
-// レジストリのセットアップ
-// TODO:
+// アプリケーション
+include::jp/apps/index.adoc[]
 
 // アップグレード
 include::jp/upgrade/upgrade.adoc[]
