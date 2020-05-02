@@ -1,0 +1,10 @@
+=== 概要
+
+Ansibleインストーラを使用する場合は、 https://rook.io/[Rook] を使用してストレージをセットアップすることができます。
+
+以下の2種類をサポートしています。
+
+* https://rook.github.io/docs/rook/master/nfs.html[NFS]
+* https://rook.github.io/docs/rook/master/ceph-quickstart.html[Ceph Storage]
+
+

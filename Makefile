@@ -3,7 +3,7 @@ TARGET_DIR = ../target/install/jp
 SRCS = kubernetes-guide_jp.adoc
 TARGET = $(SRCS:%.adoc=%.html)
 
-all: $(TARGET)
+all: clean $(TARGET)
 
 %.html: %.adoc
 	asciidoctor -o $@ $<

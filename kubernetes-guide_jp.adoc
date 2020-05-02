@@ -44,8 +44,8 @@ include::jp/ansible/ansible.adoc[]
 // オフラインインストール
 include::jp/offline/offline.adoc[]
 
-// ストレージのセットアップ
-// TODO:
+// ストレージ
+include::jp/storage/index.adoc[]
 
 // レジストリのセットアップ
 // TODO:
