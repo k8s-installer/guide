@@ -10,7 +10,7 @@ NFSサーバは Kubernetes クラスタ上の Pod として起動されます。
 
 CAUTION:: 本設定では特定の1つのノード上のストレージを使用するため、可用性はありません。
 
-==== 設定
+==== 設定・デプロイ
 
 NFS を使用する場合は `inventory/group_vars/all/storage.yml` に設定を記述します。
 例を示します。
@@ -40,6 +40,10 @@ rook_nfs_pv_host: "worker-1"
 ** 指定したノードは Schedulable である必要があります。
 * rook_nfs_pv_size: Local Volume のサイズ(NFSサーバとして使用するストレージサイズ)を指定します。デフォルトは 10Gi です。
 * rook_nfs_pv_dir: Local Volume を作成するディレクトリを指定します。デフォルトは /var/lib/rook-nfs です。
+
+以下手順でデプロイを行ってください。
+
+    $ ansible-playbook -i inventory/hosts apps.yml --tags=rook-nfs
 
 ==== ストレージクラス
 

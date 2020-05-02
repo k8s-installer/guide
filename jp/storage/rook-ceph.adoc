@@ -1,2 +1,57 @@
 === Rook / Ceph
 
+Rook + Ceph を使用することができます。
+
+詳細は Rook Documentation の https://rook.github.io/docs/rook/master/ceph-quickstart.html[Ceph Storage Quickstart] を参照してください。
+
+==== 必要条件
+
+以下の条件が必要です。
+
+* ワーカーノードが３台以上必要です。
+* 未フォーマット/パーティション無しの Raw block device がワーカーノードに接続されている必要があります。
+
+https://rook.github.io/docs/rook/master/ceph-prerequisites.html[Ceph Prerequisites] も参照してください。
+
+==== 設定・デプロイ
+
+Ceph を使用する場合は `inventory/group_vars/all/storage.yml` に設定を記述します。
+
+```yaml
+#----------------------------------------------------------
+# rook-ceph config
+#----------------------------------------------------------
+rook_ceph_enabled: yes
+```
+
+rook_ceph_enabled を yes に設定してください。
+
+以下手順でデプロイを行ってください。
+
+    $ ansible-playbook -i inventory/hosts apps.yml --tags=rook-ceph
+
+Rook / Ceph のデプロイには10分程度かかります。`watch kubectl -n rook-ceph get all` で状態を確認してください。
+
+==== ストレージクラス
+
+以下のストレージクラスが追加されます。
+
+* `rook-ceph-block` : ブロックストレージ(rbd)
+* `rook-cephfs` : ファイルシステム (cephfs)
+
+本ストレージを使用するための Persistent Volume Claim (PVC) の例を示します。
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rook-ceph-pv-claim
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+  requests:
+    storage: 100Mi
+```
+
