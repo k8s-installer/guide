@@ -1,12 +1,3 @@
-== 手動インストール手順
-
-本章では手動で Kubernetes をインストールする手順ついて説明します。
-
-なお、本項目の手順は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadmのインストール]
-手順に準じています。
-
-NOTE: 通常はインストーラを使用して自動インストールを行ってください。
-インストーラはここに示す手順を自動的に実行するようになっています。
 
 === 共通手順
 

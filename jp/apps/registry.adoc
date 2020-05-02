@@ -7,7 +7,7 @@
 また、コンテナイメージを格納するために Persistent Volume が必要です。
 Rook / NFS または Rook / Ceph をデプロイしている場合は、これをそのまま使用できます。
 
-=== 設定・デプロイ
+==== 設定・デプロイ
 
 プライベートレジストリを使用する場合は `inventory/group_vars/all/registry.yml` に設定を記述します。
 
@@ -40,15 +40,15 @@ registry_pvc_size: 10Gi
 * registry_user: レジストリ認証ユーザ名を指定します。適宜変更してください。
 * registry_password: レジストリ認証パスワードを指定します。適宜変更してください。
 * registry_pvc_storage_class: 使用する PV のストレージクラスを指定します。
-** Rook / NFS を使用する場合は `rook-nfs-share1` を指定してください。
-** Rook / Ceph を使用する場合は `rook-ceph-block` を指定してください。
+** <<_rook_nfs, Rook / NFS>> を使用する場合は `rook-nfs-share1` を指定してください。
+** <<_rook_ceph, Rook / Ceph>> を使用する場合は `rook-ceph-block` を指定してください。
 * registry_pvc_size: レジストリとして確保する PV のサイズを指定してください。
 
 以下手順でデプロイを行ってください。
 
     $ ansible-playbook -i inventory/hosts apps.yml --tags=registry
 
-=== レジストリの使用
+==== レジストリの使用
 
 レジストリは Node Port service として export されます。
 以下手順でポート番号を確認してください。

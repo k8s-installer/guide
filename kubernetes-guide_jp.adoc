@@ -17,23 +17,10 @@ include::jp/changes.adoc[]
 :sectnums:
 :sectnumlevels: 4
 
-== はじめに
-
-// 本書の位置づけ・イントロ
-include::jp/intro/intro.adoc[]
-
-// 用語集
-include::jp/intro/glossary.adoc[]
-
-// 必要環境
-include::jp/intro/requirements.adoc[]
-
-// インストールの概要
-include::jp/intro/abstract.adoc[]
+include::jp/intro/index.adoc[]
 
 // 手動インストール
-include::jp/manual/install-common.adoc[]
-include::jp/manual/install-single.adoc[]
+include::jp/manual/index.adoc[]
 
 // スクリプトベースインストーラ
 include::jp/script-install/install-single.adoc[]
@@ -41,19 +28,17 @@ include::jp/script-install/install-single.adoc[]
 // Ansibleインストーラ
 include::jp/ansible/ansible.adoc[]
 
-// オフラインインストール
-include::jp/offline/offline.adoc[]
-
 // ストレージ
 include::jp/storage/index.adoc[]
 
 // アプリケーション
 include::jp/apps/index.adoc[]
 
+// オフラインインストール
+include::jp/offline/offline.adoc[]
+
 // アップグレード
 include::jp/upgrade/upgrade.adoc[]
 
 // 運用
-== 運用
-
-include::jp/ops/rotate-certs.adoc[]
+include::jp/ops/index.adoc[]
