@@ -44,6 +44,18 @@ Ansible マシンに Ansible 2.9 以上をインストールする必要があ�
 ** ssh パスワード認証は使用できません。必ず鍵認証を使用してください。
 * Ansibleマシンから各ノードに対して ssh ログインしたあと、ログインユーザで sudo を実行可能であること。
 
+==== ssh 鍵認証のセットアップ手順
+
+Ansibleマシン上に ssh 鍵ペアがまだない場合は、以下手順で作成してください。
+~/.ssh/id_rsa, ~/.ssh/id_rsa.pub が生成されます。
+
+    $ ssh-keygen
+
+Ansible マシン上で、各ノード毎に以下手順を実行し鍵認証でログインできるようにします。
+公開鍵は各ノードの ~/.ssh/authorized_keys に追加されます。
+
+    $ ssh-copy-id [hostname]
+
 ==== Ansible のインストール手順
 
 Python 仮想環境を作成してください。
