@@ -39,8 +39,9 @@ Ansible マシンに Ansible 2.9 以上をインストールする必要があ�
 全マスターノード・ワーカーノードに対して、以下の条件が必要です。
 
 * Ansibleマシンから各ノードに対して鍵認証で ssh 接続が可能であること。
-** ログインユーザとして　root は使用しないでください。
+** ログインユーザとして root は使用しないでください。
 ** ログインするユーザ名は全マシンで同一にすることを推奨します。
+** ssh パスワード認証は使用できません。必ず鍵認証を使用してください。
 * Ansibleマシンから各ノードに対して ssh ログインしたあと、ログインユーザで sudo を実行可能であること。
 
 ==== Ansible のインストール手順
@@ -123,20 +124,51 @@ NOTE: プロキシを使用する場合、proxy_noproxy には必ず kube-apiser
 
 === インストール
 
-以下手順でインストールを行ってください。
+==== 共通処理
+
+以下手順を実行し、全ノード共通の事前処理を実行します。
+本手順により、オフラインリポジトリ設定、Proxy設定、必要なパッケージ(Docker/kubeadm含む)のインストール、
+共通のコンフィグレーション処理、などが実行されます。
 
     $ ansible-playbook -i inventory/hosts site.yml
 
-* ssh ログイン時にパスワードまたはパスフレーズが必要な場合は -k (--ask-pass) オプションを付与してください。
-* ログイン先マシンで `sudo` パスワードが必要な場合は -K (--ask-become-pass) オプションを付与してください。
+NOTE:
+  ssh ログイン時にパスフレーズが必要な場合は -k (--ask-pass) オプションを付与してください。
+  また、ログイン先マシンで `sudo` パスワードが必要な場合は -K (--ask-become-pass) オプションを付与してください。
 
-以下の playbook が順次実行されます。
+==== 1台目のマスターノードへの Kubernetes デプロイ
 
-* common.yml: Docker/Kubeadm インストール、オフラインリポジトリ設定、Proxy設定など、全マシン共通のインストールが実行されます。
-* master-first.yml: 1台目のマスタノードへの Kubernetes デプロイが実行されます。
-* master-secondary.yml: 2台目以降のマスタノードへの Kubernetes デプロイが実行されます。
-* worker.yml: ワーカーノードへの Kubernetes デプロイが実行されます。
-* apps.yml: アプリケーション類のデプロイが実行されます。
+以下を実行し、1台目のマスターノードへ Kubernetes マスターをインストールします。
+
+    $ ansible-playbook -i inventory/hosts master-first.yml
+
+この時点で Kubernetes はシングルノードで動作している状態になります。
+当該ホストに ssh ログインし、`kubectl get all --all-namespaces` を実行すれば、各種 Pod が稼働していることを確認できます。
+
+==== 2台目以降のマスターノードへのデプロイ
+
+以下を実行し、2台目以降のノードを Kubernetes クラスタにマスターノードとして参加させます。
+
+    $ ansible-playbook -i inventory/hosts master-secondary.yml
+
+==== ワーカーノードへのデプロイ
+
+以下を実行し、全ワーカーノードを Kubernetes クラスタに参加させます。
+
+    $ ansible-playbook -i inventory/hosts worker.yml
+
+==== アプリケーション類のデプロイ
+
+以下を実行し、アプリケーション類(Ingress controller, metrics server, Rook など)をdプロイします。
+
+    $ ansible-playbook -i inventory/hosts apps.yml
+
+==== 補足: 全手順を一括で行う方法
+
+以下手順を実行することで、上記の全手順を一括で行うことも可能です。
+通常は順を追って１ステップずつ実行することをお勧めします。
+
+    $ ansible-playbook -i inventory/hosts site.yml
 
 === インストール後の確認
 
