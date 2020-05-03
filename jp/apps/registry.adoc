@@ -60,4 +60,4 @@ registry_pvc_size: 10Gi
 
 以下手順で login 可能です。
 
-    $ docket login https://[node]:[nodeport]
+    $ docker login https://[node]:[nodeport]
