@@ -8,6 +8,30 @@ Ansibleインストーラを使う場合は、インストール作業は Ansibl
 
 本手順は `k8s-installer` の ansible ディレクトリで作業してください。
 
+=== 仕様
+
+Ansible インストーラでデプロイされる Kubernetes クラスタの仕様は以下の通りです。
+
+* 全ノードに以下の設定がなされます。
+** Swap が無効になります。
+** SELinux が無効になります。
+** ファイヤウォールはデフォルトで on になります (オプションで off に設定可能)
+** sysctl 設定が変更されます。
+** 以下のパッケージがインストールされます。
+*** docker, kubeadm, kubectl, cfssl, libselinux-python, lvm2, gnupg2, nfs-utils/nfs-common
+* kubeadm を使用して Kubernetes クラスタがデプロイされます。
+** CA 証明書有効期限は 30 年です (kubeadm デフォルトは 10年)
+** マスターノードは Schedulable に設定されます (オプションで NoSchedule に設定可能)
+* マスターノード上に ~/.kube/config が設定されます。
+* Calico network plugin がデプロイされます。
+* Kubernetes クラスタ上に以下のものがデプロイされます。ただし (*) が付与されているものはデフォルトではデプロイされません。
+** Nginx ingress controller
+** metrics-server
+** rook-nfs (*)
+** rook-ceph (*)
+** storageclassデフォルト値設定 (*)
+** docker registry (*)
+
 === 必要環境
 
 Ansible マシンに Ansible 2.9 以上をインストールする必要があります。
