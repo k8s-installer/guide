@@ -1,5 +1,0 @@
-== ストレージ
-
-include::intro.adoc[]
-include::rook-nfs.adoc[]
-include::rook-ceph.adoc[]

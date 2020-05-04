@@ -1,0 +1,3 @@
+== 運用
+
+include::rotate-certs_jp.adoc[]

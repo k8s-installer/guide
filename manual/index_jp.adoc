@@ -8,6 +8,6 @@
 NOTE: 通常はインストーラを使用して自動インストールを行ってください。
 インストーラはここに示す手順を自動的に実行するようになっています。
 
-include::install-common.adoc[]
+include::install-common_jp.adoc[]
 
-include::install-single.adoc[]
+include::install-single_jp.adoc[]

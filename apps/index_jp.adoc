@@ -2,6 +2,6 @@
 
 <<Ansibleインストーラ>> を使用している場合、いくつかのアプリケーションのデプロイを自動実行することができます。
 
-include::registry.adoc[]
+include::registry_jp.adoc[]
 
 

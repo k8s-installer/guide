@@ -12,33 +12,33 @@
 :xrefstyle: full
 
 :sectnums!:
-include::jp/changes.adoc[]
+include::changes/index_jp.adoc[]
 
 :sectnums:
 :sectnumlevels: 4
 
-include::jp/intro/index.adoc[]
+include::intro/index_jp.adoc[]
 
 // 手動インストール
-include::jp/manual/index.adoc[]
+include::manual/index_jp.adoc[]
 
 // スクリプトベースインストーラ
-include::jp/script-install/install-single.adoc[]
+include::script-install/index_jp.adoc[]
 
 // Ansibleインストーラ
-include::jp/ansible/ansible.adoc[]
+include::ansible/index_jp.adoc[]
 
 // ストレージ
-include::jp/storage/index.adoc[]
+include::storage/index_jp.adoc[]
 
 // アプリケーション
-include::jp/apps/index.adoc[]
+include::apps/index_jp.adoc[]
 
 // オフラインインストール
-include::jp/offline/offline.adoc[]
+include::offline/index_jp.adoc[]
 
 // アップグレード
-include::jp/upgrade/upgrade.adoc[]
+include::upgrade/index_jp.adoc[]
 
 // 運用
-include::jp/ops/index.adoc[]
+include::ops/index_jp.adoc[]
