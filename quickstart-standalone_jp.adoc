@@ -1,0 +1,75 @@
+= Kubernetes 構築クイックスタートガイド(スタンドアロン編): 0.1版
+:icons: font
+:encoding: utf-8
+:lang: ja
+:toc: left
+:toc-title: 目次
+:toclevels: 4
+:numbered:
+:doctype: book
+//:source-highlighter: pretty
+:source-highlighter: prettify
+:xrefstyle: full
+
+:sectnums:
+:sectnumlevels: 4
+
+== はじめに
+
+本書は、１台のノード(スタンドアロン環境)に Kubernetes をインストールするための手順を示したものです。
+スタンドアロン環境は、Kubernetes を利用した開発や評価などに利用できます。
+
+本番環境含むクラスタ環境へのインストール手順については link:kubernetes-guide_jp.html[Kubernetes構築ガイド本編] を参照してください。
+
+== 必要環境
+
+Red Hat Enterprise Linux 7 または CentOS 7 が必要です。
+また Internet 接続が必要です。
+
+詳細は、link:kubernetes-guide_jp.html[Kubernetes構築ガイド本編] の「必要環境」を参照してください。
+
+== インストール手順
+
+=== インストーラのダウンロード
+
+インストーラとして `k8s-installer` を使用します。
+
+https://github.com/k8s-installer/k8s-installer の "Releases" からダウンロードしてください。
+
+=== 設定
+
+インストーラを展開し、`script` ディレクトリに cd で移動してください。
+
+以下手順で config.sample.sh を config.sh にコピーしてください。
+
+    $ cp config.sample.sh config.sh
+
+Internet 接続に Proxy を経由する必要がある場合のみ、エディタで config.sh を編集する必要があります。
+`PROXY_URL` にプロキシサーバの URL を、`NO_PROXY` にプロキシサーバを経由しないホスト名/IPアドレスをカンマで区切って指定してください。
+この際、このホストのIPアドレスを必ず `NO_PROXY` に指定する必要がります。
+
+以下に例を示します。
+
+```bash
+...
+PROXY_URL=http://proxy.example.com:8080
+NO_PROXY=localhost,127.0.0.1,10.0.1.2
+...
+```
+
+=== インストール
+
+以下手順でインストールを実行してください。
+
+```bash
+$ sudo ./install-common.sh
+$ sudo ./install-master-single.sh
+$ ./install-kubeconfig.sh
+$ ./install-cni.sh
+```
+
+=== インストール確認
+
+インストールが完了したら、`kubectl get nodes` を実行し、本ノードが Ready 状態になっていることを確認してください。
+
+また、`kubectl get all -n kube-system` を実行し、Podがすべて正常に起動していることを確認してください。
