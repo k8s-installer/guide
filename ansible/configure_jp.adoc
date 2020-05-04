@@ -1,0 +1,54 @@
+=== 設定
+
+Ansibleノードに作業ユーザでログインします。
+インストーラを展開し、以下作業を行います。
+
+==== インベントリ
+
+`sample/hosts` ファイルを `inventory/hosts` ファイルにコピーし、インストール先のノードの情報を設定してください。
+
+グループが以下3つありますので、適切なグループにマシンを定義してください。
+
+* master_first: 1台目のマスタノードを指定してください。
+* master_secondary: HA構成を取る場合に2台目以降のマスタノードを指定してください。
+* worker: ワーカーノードを指定してください。
+
+シングルマスター構成の場合は master_first, worker のみ設定してください (master_secondary は空にしてください)
+
+HA構成の場合はマスターノードが3台以上の奇数台が必要です。
+最初の1台をmaster_first に、残りを master_secondary に指定してください。
+
+マシンの指定方法の例を示します。
+
+    master1 ansible_user=johndoe ansible_host=10.0.1.10 ip=10.0.1.10
+
+* hostname: 先頭にホスト名を指定します。指定した文字列がそのまま Kubernetes のノード名となります。
+* ansible_user: ssh ログインする際に使用するターゲットノード上のユーザ名を指定します。
+** Ansibleノード上のユーザと同一ユーザ名の場合は省略可能です。
+* ansible_host: ssh で接続する際に使用するホスト名またはIPアドレスを指定します。
+** ホスト名と同一の場合は省略可能です。
+* ip: ノードの IP アドレスを指定します。
+** クラスタの他ノードと直接通信可能な IP アドレスを指定してください。これが kube-apiserver および kubelet で使用(広告)する IP アドレスになります。
+** 省略した場合は、リモートマシンのデフォルトゲートウェイに指定されたインタフェースのIPアドレスが使用されます。
+
+==== 変数設定
+
+sample/group_vars/all/*.yml ファイルを inventory/group_vars/all/ ディレクトリにコピーし、適宜編集してください。
+
+* main.yml
+** lb_apiserver_address: HA構成の場合、ロードバランサの FQDN名またはIPアドレスを設定してください。
+** pod_subnet: Podサブネット(CIDR)を指定してください。通常は変更不要ですが、IPアドレスが既存アドレスと衝突する場合は変更が必要です。
+* offline.yml
+** offline_install: オフラインインストールをする場合は yes に設定してください。(後述)
+* proxy.yml
+** Internet 接続にプロキシを経由する必要がある場合は、proxy_url, proxy_noproxy を設定してください。
+* version.yml
+** インストールする Kubernetes バージョンを適宜指定します。無指定の場合は `k8s-installer` のデフォルト値が使用されます。
+* storage.yml
+** ストレージ設定を行います。
+* registry.yml
+** プライベートレジストリ設定を行います。
+
+NOTE: プロキシを使用する場合、proxy_noproxy には必ず kube-apiserver の IPアドレスまたはDNS名を指定しなければなりません。
+シングルホストの場合はマスターノードの、HA構成の場合はロードバランサの値を指定してください。
+これが適切に設定されていないとマスターノードのインストールが失敗します。
