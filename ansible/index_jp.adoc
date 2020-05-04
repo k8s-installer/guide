@@ -3,8 +3,8 @@
 Ansible ベースインストーラを使用してインストールする手順を説明します。
 
 Ansibleインストーラを使う場合は、インストール作業は Ansible をインストールした任意のマシンで実施します。
-(マスターノード上で実行しても構いません)。
-以下、本マシンを Ansibleマシンと呼びます。
+以下、本マシンを Ansibleノードと呼びます。
+なお、マスターノード・ワーカーノードのいずれかを Ansibleノードとして兼用しても構いません。
 
 本手順は `k8s-installer` の ansible ディレクトリで作業してください。
 
@@ -34,31 +34,49 @@ Ansible インストーラでデプロイされる Kubernetes クラスタの仕
 
 === 必要環境
 
-Ansible マシンに Ansible 2.9 以上をインストールする必要があります。
+Ansibleノードに Ansible 2.9 以上をインストールする必要があります。
 
-全マスターノード・ワーカーノードに対して、以下の条件が必要です。
+Ansibleノードから全マスターノード・ワーカーノードに対して ssh でログインできる必要があります。
+この際、以下の条件が必要です。
 
-* Ansibleマシンから各ノードに対して鍵認証で ssh 接続が可能であること。
-** ログインユーザとして root は使用しないでください。
+* Ansibleノードから各ノードに対して公開鍵認証で ssh 接続が可能であること。
+** この際、ログインユーザとして root は使用しないでください。
 ** ログインするユーザ名は全マシンで同一にすることを推奨します。
-** ssh パスワード認証は使用できません。必ず鍵認証を使用してください。
-* Ansibleマシンから各ノードに対して ssh ログインしたあと、ログインユーザで sudo を実行可能であること。
+** パスワード認証は使用できません。必ず公開鍵認証を使用してください。
+* 公開鍵認証を行う際、パスフレーズの入力が不要であること。
+** パスフレーズを設定している場合、ssh-agent を使用する必要があります。
+* Ansibleノードから各ノードに対して ssh ログインしたあと、ログインユーザで sudo を実行可能であること。
 
 ==== ssh 鍵認証のセットアップ手順
 
-Ansibleマシン上に ssh 鍵ペアがまだない場合は、以下手順で作成してください。
+Ansibleノード上に ssh 鍵ペアがまだない場合は、以下手順で作成してください。
 ~/.ssh/id_rsa, ~/.ssh/id_rsa.pub が生成されます。
 
     $ ssh-keygen
 
-Ansible マシン上で、各ノード毎に以下手順を実行し鍵認証でログインできるようにします。
+Ansibleノード上で、各マスターノード・ワーカーノード毎に以下手順を実行し公開鍵認証でログインできるようにします。
 公開鍵は各ノードの ~/.ssh/authorized_keys に追加されます。
 
     $ ssh-copy-id [hostname]
 
+==== ssh-agent
+
+ssh 鍵にパスフレーズを設定している場合は(セキュリティ上パスフレーズは設定すべきです)、
+ssh-agent を使用してパスフレーズ入力無しで ssh ログインできるようにする必要があります。
+
+ssh-agent の起動方法はいくつかありますが、最も簡単な方法は Ansibleノードで以下を実行する方法です。
+
+    $ exec ssh-agent $SHELL
+
+以下手順でパスフレーズを ssh-agent に設定してください。
+
+    $ ssh-add
+
+ログアウトすると ssh-agent は終了しますので、本手順はAnsibleノードへのログインの度に毎回実行する必要があります。
+
 ==== Ansible のインストール手順
 
-Python 仮想環境を作成してください。
+Ansibleノード上でPython 仮想環境を作成してください。
 Python 2 + https://virtualenv.pypa.io/en/latest/[virtualenv] または
 Python 3 + https://docs.python.org/ja/3/library/venv.html[venv] を使用します。
 
@@ -86,7 +104,7 @@ https://github.com/tmurakam/python-offline-env[python-offline-env] を使用し�
 
 === 設定
 
-Ansible マシンに上記作業ユーザでログインします。
+Ansibleノードに作業ユーザでログインします。
 インストーラを展開し、以下作業を行います。
 
 ==== インベントリ
@@ -95,32 +113,33 @@ Ansible マシンに上記作業ユーザでログインします。
 
 グループが以下3つありますので、適切なグループにマシンを定義してください。
 
-* master_first: マスタノードを指定してください。ここに登録できるマシンは1台だけです。
+* master_first: 1台目のマスタノードを指定してください。
 * master_secondary: HA構成を取る場合に2台目以降のマスタノードを指定してください。
 * worker: ワーカーノードを指定してください。
 
-シングルマスター構成の場合は master_first, worker のみ設定してください (master_secondary　は空にしてください)
+シングルマスター構成の場合は master_first, worker のみ設定してください (master_secondary は空にしてください)
 
-HA構成の場合はマスターノードが3台必要です。
-最初の1台をmaster_first に、残りの2台を master_secondary に指定してください。
+HA構成の場合はマスターノードが3台以上の奇数台が必要です。
+最初の1台をmaster_first に、残りを master_secondary に指定してください。
 
 マシンの指定方法の例を示します。
 
-    hostname ansible_user=johndoe ansible_host=10.0.1.10 ip=10.0.1.10
+    master1 ansible_user=johndoe ansible_host=10.0.1.10 ip=10.0.1.10
 
-* hostname: ここに指定した文字列がそのまま Kubernetes のノード名となります。
-* ansible_user: ssh ログインする際に使用するターゲットマシン上のユーザ名を指定します。
-** Ansibleマシン上のユーザと同一ユーザ名の場合は省略可能です。
+* hostname: 先頭にホスト名を指定します。指定した文字列がそのまま Kubernetes のノード名となります。
+* ansible_user: ssh ログインする際に使用するターゲットノード上のユーザ名を指定します。
+** Ansibleノード上のユーザと同一ユーザ名の場合は省略可能です。
 * ansible_host: ssh で接続する際に使用するホスト名またはIPアドレスを指定します。
 ** ホスト名と同一の場合は省略可能です。
-* ip: kube-apiserver および kubelet で使用(広告)する IP アドレスを指定します。
+* ip: ノードの IP アドレスを指定します。
+** クラスタの他ノードと直接通信可能な IP アドレスを指定してください。これが kube-apiserver および kubelet で使用(広告)する IP アドレスになります。
 ** 省略した場合は、リモートマシンのデフォルトゲートウェイに指定されたインタフェースのIPアドレスが使用されます。
 
 ==== 変数設定
 
 sample/group_vars/all/*.yml ファイルを inventory/group_vars/all/ ディレクトリにコピーし、適宜編集してください。
 
-* all.yml
+* main.yml
 ** lb_apiserver_address: HA構成の場合、ロードバランサの FQDN名またはIPアドレスを設定してください。
 ** pod_subnet: Podサブネット(CIDR)を指定してください。通常は変更不要ですが、IPアドレスが既存アドレスと衝突する場合は変更が必要です。
 * offline.yml
@@ -129,6 +148,10 @@ sample/group_vars/all/*.yml ファイルを inventory/group_vars/all/ ディレ�
 ** Internet 接続にプロキシを経由する必要がある場合は、proxy_url, proxy_noproxy を設定してください。
 * version.yml
 ** インストールする Kubernetes バージョンを適宜指定します。無指定の場合は `k8s-installer` のデフォルト値が使用されます。
+* storage.yml
+** ストレージ設定を行います。
+* registry.yml
+** プライベートレジストリ設定を行います。
 
 NOTE: プロキシを使用する場合、proxy_noproxy には必ず kube-apiserver の IPアドレスまたはDNS名を指定しなければなりません。
 シングルホストの場合はマスターノードの、HA構成の場合はロードバランサの値を指定してください。
@@ -142,17 +165,15 @@ NOTE: プロキシを使用する場合、proxy_noproxy には必ず kube-apiser
 本手順により、オフラインリポジトリ設定、Proxy設定、必要なパッケージ(Docker/kubeadm含む)のインストール、
 共通のコンフィグレーション処理、などが実行されます。
 
-    $ ansible-playbook -i inventory/hosts site.yml
+    $ ansible-playbook -i inventory/hosts common.yml -K
 
-NOTE:
-  ssh ログイン時にパスフレーズが必要な場合は -k (--ask-pass) オプションを付与してください。
-  また、ログイン先マシンで `sudo` パスワードが必要な場合は -K (--ask-become-pass) オプションを付与してください。
+NOTE: ログイン先マシンで `sudo` パスワードが不要な場合は -K (--ask-become-pass) オプションを省略できます。
 
 ==== 1台目のマスターノードへの Kubernetes デプロイ
 
 以下を実行し、1台目のマスターノードへ Kubernetes マスターをインストールします。
 
-    $ ansible-playbook -i inventory/hosts master-first.yml
+    $ ansible-playbook -i inventory/hosts master-first.yml -K
 
 この時点で Kubernetes はシングルノードで動作している状態になります。
 当該ホストに ssh ログインし、`kubectl get all --all-namespaces` を実行すれば、各種 Pod が稼働していることを確認できます。
@@ -161,26 +182,26 @@ NOTE:
 
 以下を実行し、2台目以降のノードを Kubernetes クラスタにマスターノードとして参加させます。
 
-    $ ansible-playbook -i inventory/hosts master-secondary.yml
+    $ ansible-playbook -i inventory/hosts master-secondary.yml -K
 
 ==== ワーカーノードへのデプロイ
 
 以下を実行し、全ワーカーノードを Kubernetes クラスタに参加させます。
 
-    $ ansible-playbook -i inventory/hosts worker.yml
+    $ ansible-playbook -i inventory/hosts worker.yml -K
 
 ==== アプリケーション類のデプロイ
 
 以下を実行し、アプリケーション類(Ingress controller, metrics server, Rook など)をdプロイします。
 
-    $ ansible-playbook -i inventory/hosts apps.yml
+    $ ansible-playbook -i inventory/hosts apps.yml -K
 
 ==== 補足: 全手順を一括で行う方法
 
 以下手順を実行することで、上記の全手順を一括で行うことも可能です。
 通常は順を追って１ステップずつ実行することをお勧めします。
 
-    $ ansible-playbook -i inventory/hosts site.yml
+    $ ansible-playbook -i inventory/hosts site.yml -K
 
 === インストール後の確認
 
