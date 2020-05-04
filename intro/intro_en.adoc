@@ -1,0 +1,3 @@
+=== The purpose of this book
+
+This document describes how to install and use Kubernetes in an on-premises environment.

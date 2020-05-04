@@ -1,6 +1,6 @@
 TARGET_DIR = ../target/install/jp
 
-SRCS = kubernetes-guide_jp.adoc
+SRCS = kubernetes-guide_jp.adoc kubernetes-guide_en.adoc
 TARGET = $(SRCS:%.adoc=%.html)
 
 all: clean $(TARGET)

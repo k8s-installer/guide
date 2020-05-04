@@ -1,0 +1,44 @@
+= Kubernetes Installation Guide: ver 0.1
+:icons: font
+:encoding: utf-8
+:lang: ja
+:toc: left
+:toc-title: Index
+:toclevels: 4
+:numbered:
+:doctype: book
+//:source-highlighter: pretty
+:source-highlighter: prettify
+:xrefstyle: full
+
+:sectnums!:
+include::changes/index_jp.adoc[]
+
+:sectnums:
+:sectnumlevels: 4
+
+include::intro/index_en.adoc[]
+
+// 手動インストール
+include::manual/index_jp.adoc[]
+
+// スクリプトベースインストーラ
+include::script-install/index_jp.adoc[]
+
+// Ansibleインストーラ
+include::ansible/index_jp.adoc[]
+
+// ストレージ
+include::storage/index_jp.adoc[]
+
+// アプリケーション
+include::apps/index_jp.adoc[]
+
+// オフラインインストール
+include::offline/index_jp.adoc[]
+
+// アップグレード
+include::upgrade/index_jp.adoc[]
+
+// 運用
+include::ops/index_jp.adoc[]
