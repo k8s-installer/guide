@@ -2,4 +2,4 @@
 
 マスターノード上で `kubectl get nodes` を実行し、全ノードが追加されていて Ready になっていることを確認してください。
 
-また、`kubectl get all -n kube-system` を実行し、Podがすべて正常に起動していることを確認してください。
+また、`kubectl get all --all-namespaces` を実行し、Podがすべて正常に起動していることを確認してください。

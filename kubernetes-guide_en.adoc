@@ -1,4 +1,4 @@
-= Kubernetes Installation Guide: ver 0.1
+= Kubernetes Installation Guide: ver 0.0.7
 :icons: font
 :encoding: utf-8
 :lang: ja
@@ -27,6 +27,9 @@ include::script-install/index_jp.adoc[]
 
 // Ansibleインストーラ
 include::ansible/index_jp.adoc[]
+
+// ネットワーキング
+include::networking/index_jp.adoc[]
 
 // ストレージ
 include::storage/index_jp.adoc[]

@@ -21,7 +21,7 @@ NOTE: ログイン先マシンで `sudo` パスワードが不要な場合は -K
 
 ==== 2台目以降のマスターノードへのデプロイ
 
-以下を実行し、2台目以降のノードを Kubernetes クラスタにマスターノードとして参加させます。
+以下を実行し、2台目以降のマスターノードを Kubernetes クラスタに参加させます。
 
     $ ansible-playbook -i inventory/hosts master-secondary.yml -K
 
@@ -39,9 +39,10 @@ NOTE: ログイン先マシンで `sudo` パスワードが不要な場合は -K
     $ ansible-playbook -i inventory/hosts storage.yml -K
     $ ansible-playbook -i inventory/hosts apps.yml -K
 
-==== 補足: 全手順を一括で行う方法
-
+.全手順を一括で行う方法
+****
 以下手順を実行することで、上記の全手順を一括で行うことも可能です。
 ただし、通常は順を追って１ステップずつ確認しながら実行することをお勧めします。
 
     $ ansible-playbook -i inventory/hosts site.yml -K
+****
