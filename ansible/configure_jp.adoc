@@ -39,16 +39,22 @@ sample/group_vars/all/*.yml ファイルを inventory/group_vars/all/ ディレ�
 ** lb_apiserver_address: HA構成の場合、ロードバランサの FQDN名またはIPアドレスを設定してください。
 ** pod_subnet: Podサブネット(CIDR)を指定してください。通常は変更不要ですが、IPアドレスが既存アドレスと衝突する場合は変更が必要です。
 * offline.yml
-** offline_install: オフラインインストールをする場合は yes に設定してください。(後述)
+** offline_install: オフラインインストールをする場合は yes に設定してください。オフラインインストール手順の詳細は <<_オフラインインストール>> を参照してください。
 * proxy.yml
 ** Internet 接続にプロキシを経由する必要がある場合は、proxy_url, proxy_noproxy を設定してください。
 * version.yml
 ** インストールする Kubernetes バージョンを適宜指定します。無指定の場合は `k8s-installer` のデフォルト値が使用されます。
+* networking.yml
+** ネットワーク設定を行います。詳細は <<_ネットワーキング>> を参照してください。
 * storage.yml
-** ストレージ設定を行います。
+** ストレージ設定を行います。詳細は <<_ストレージ>> を参照してください。
 * registry.yml
-** プライベートレジストリ設定を行います。
+** プライベートレジストリ設定を行います。詳細は <<_プライベートレジストリ>> を参照してください。
 
-NOTE: プロキシを使用する場合、proxy_noproxy には必ず kube-apiserver の IPアドレスまたはDNS名を指定しなければなりません。
+[NOTE]
+====
+プロキシを使用する場合、proxy_noproxy には必ず kube-apiserver の IPアドレスまたはDNS名を指定しなければなりません。
 シングルホストの場合はマスターノードの、HA構成の場合はロードバランサの値を指定してください。
+
 これが適切に設定されていないとマスターノードのインストールが失敗します。
+====

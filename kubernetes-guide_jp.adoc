@@ -28,6 +28,9 @@ include::script-install/index_jp.adoc[]
 // Ansibleインストーラ
 include::ansible/index_jp.adoc[]
 
+// ネットワーキング
+include::networking/index_jp.adoc[]
+
 // ストレージ
 include::storage/index_jp.adoc[]
 

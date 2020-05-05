@@ -5,7 +5,7 @@ Ansible インストーラでデプロイされる Kubernetes クラスタの仕
 * 全ノードに以下の設定がなされます。
 ** Swap が無効になります。
 ** SELinux が無効になります。
-** ファイヤウォールはデフォルトで on になります (オプションで off に設定可能)
+** ファイヤウォールはデフォルトで off になります (オプションで on に設定可能)
 ** sysctl 設定が変更されます。
 ** 以下のパッケージがインストールされます。
 *** docker, kubeadm, kubectl, cfssl, libselinux-python, lvm2, gnupg2, nfs-utils/nfs-common
@@ -16,8 +16,9 @@ Ansible インストーラでデプロイされる Kubernetes クラスタの仕
 * Calico network plugin がデプロイされます。
 * Kubernetes クラスタ上に以下のものがデプロイされます。ただし (*) が付与されているものはデフォルトではデプロイされません。
 ** Nginx ingress controller
-** metrics-server
+** MetalLB (*)
 ** rook-nfs (*)
 ** rook-ceph (*)
 ** storageclassデフォルト値設定 (*)
+** metrics-server
 ** docker registry (*)
