@@ -22,3 +22,6 @@ Ansible インストーラでデプロイされる Kubernetes クラスタの仕
 ** storageclassデフォルト値設定 (*)
 ** metrics-server
 ** docker registry (*)
+
+なお、インストールの全シーケンスは https://github.com/k8s-installer/k8s-installer/blob/develop/ansible/design/sequence.md[k8s-installer シーケンス]
+を参照してください。
