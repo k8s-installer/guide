@@ -6,10 +6,16 @@
 
 . 手動インストール: https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadm] を使用した手動インストール
 ** 本手順は参考として提示しています。通常は `k8s-installer` インストーラを使った自動インストールを使用してください。
+** 詳細は <<_手動インストール>> を参照してください。
 . スクリプトインストーラ: shスクリプトベースのインストーラを使用した自動インストール
 ** スタンドアロン・シングルマスター構成をサポートします。
-** 本インストーラは簡易版なので、HA構成を含む本番環境にインストールする場合は Ansible インストーラを推奨します。
-. Ansibleインストーラ: Ansibleを使用したクラスタ一括での自動インストール
+** 本インストーラは簡易版で、Kubernetes クラスタのみをセットアップします(アプリケーション類はインストールしません)。
+** 通常は Ansible インストーラを推奨します。
+** 詳細は <<_スクリプトインストーラ>> を参照してください。
+. Ansibleインストーラ
+** Ansibleを使用したクラスタ一括での自動インストールです。
+** Kubernetes だけでなく、ネットワーキング・ストレージ・アプリケーションのデプロイも実行します。
+** 詳細は <<_ansibleインストーラ>>を参照してください。
 
 また、スクリプトインストーラ・Ansibleインストーラでは、オフラインインストールにも対応しています。
 オフラインインストールでは、Internetに接続されたマシンでインストールに必要なファイルをすべて取得しておき、
@@ -20,4 +26,4 @@
 スクリプトインストーラ・Ansibleインストーラは、 https://github.com/k8s-installer/k8s-installer[k8s-installer]
 に含まれています。
 
-https://github.com/k8s-installer/k8s-installer からダウンロードしてください。
+https://github.com/k8s-installer/k8s-installer/releases からダウンロードしてください。
