@@ -5,8 +5,13 @@
 なお、本項目の手順は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadmのインストール]
 手順に準じています。
 
-NOTE: 通常はインストーラを使用して自動インストールを行ってください。
+.インストーラの利用を推奨します
+****
+手動インストール手順は、参考用として提示しています。
+
+通常はインストーラを使用して自動インストールを行ってください。
 インストーラはここに示す手順を自動的に実行するようになっています。
+****
 
 include::install-common_jp.adoc[]
 

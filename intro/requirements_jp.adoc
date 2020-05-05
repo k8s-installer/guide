@@ -47,13 +47,24 @@ Kubernetes を構成する各マシンについて説明します。
 
 * クラスター内のすべてのマシン間で通信可能なネットワーク
 ** パブリックネットワークでもプライベートネットワークでも構いません
-* インターネット接続 (オンラインインストール時のみ)
+* インターネット接続
+** Proxyサーバを経由した接続でも構いません。
+** オフラインインストール時はインターネット接続は不要です。
 
 ==== その他の要件
 
-* ユニークなhostname、MACアドレス、とproduct_uuidが各ノードに必要
-* マシン内の特定のポートがファイヤウォールで開放されていること。詳細は後述します。
-* Swapがオフであること。kubeletが正常に動作するためにはswapは必ずオフでなければなりません。
+* ユニークなhostname、MACアドレス、product_uuidが各ノードに必要
+** hostname は `hostname` コマンドで確認してください。
+** MAC アドレスは `ip link` または `ifconfig -a` で確認してください。
+** product_uuid は `sudo cat /sys/class/dmi/id/product_uuid` で確認してください。
+** 詳細は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadmのインストール]
+の「MACアドレスとproduct_uuidが全てのノードでユニークであることの検証」を参照してください。
+* マシン内の特定のポートがファイヤウォールで開放されていること。
+** 開放するポートの詳細は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[必須ポートの確認] を参照してください。
+** インストーラを使用する場合は、自動的にファイヤウォールの設定が行われます。
+* Swapがオフであること。
+** kubeletが正常に動作するためにはswapは必ずオフでなければなりません。
+** インストーラを使用する場合は、自動的に Swap をオフにします。
 
 === ロードバランサ
 

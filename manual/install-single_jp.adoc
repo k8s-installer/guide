@@ -69,7 +69,7 @@ Podネットワークアドオンをインストールします。本手順書�
 スタンドアロン構成の場合のみ、マスターノードをスケジュール可能に変更します。
 これを実施しないと、マスターノード上でワークロードを実行できません。
 
- kubectl taint nodes --all node-role.kubernetes.io/master-
+ kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
 
 === ワーカーノード追加
 
