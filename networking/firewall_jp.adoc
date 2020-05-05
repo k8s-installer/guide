@@ -1,0 +1,9 @@
+=== ファイヤウォール
+
+各ノードのファイヤウォール(firewalld) はデフォルトで無効化されます。
+
+有効化したい場合は、`inventory/group_vars/all/networking.yml` の `firewall_enabled` の値を yes に設定してください。
+
+NOTE: RHEL 8 / CentOS 8 ではファイヤウォールは必ず無効化してください。
+有効化すると `kube-proxy` の nftables 設定と干渉し、正常に動作しません。
+

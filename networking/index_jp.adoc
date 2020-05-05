@@ -1,1 +1,4 @@
 == ネットワーキング
+
+include::firewall_jp.adoc[]
+include::metallb.adoc[]
