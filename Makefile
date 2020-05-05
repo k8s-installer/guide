@@ -1,16 +1,23 @@
-TARGET_DIR = ../target/install/jp
-
 SRCS = kubernetes-guide_jp.adoc kubernetes-guide_en.adoc quickstart-standalone_jp.adoc
-TARGET = $(SRCS:%.adoc=%.html)
+HTMLS = $(SRCS:%.adoc=%.html)
+PDFS = $(SRCS:%.adoc=%.pdf)
 
-all: clean $(TARGET)
+all: html
+
+html: clean-htmls $(HTMLS)
+
+pdf: clean-pdfs $(PDFS)
 
 %.html: %.adoc
-	asciidoctor -o $@ $<
+	bundle exec asciidoctor -o $@ $<
 
-clean:
-	rm -f $(TARGET)
+%.pdf: %.adoc
+	bundle exec asciidoctor-pdf -r asciidoctor-pdf-cjk -o $@ $<
 
-install: $(TARGET)
-	mkdir -p $(TARGET_DIR)
-	cp $(TARGET) $(TARGET_DIR)
+clean: clean-htmls clean-pdfs
+
+clean-htmls:
+	rm -f $(HTMLS)
+
+clean-pdfs:
+	rm -f $(PDFS)
