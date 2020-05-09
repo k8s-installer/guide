@@ -9,10 +9,14 @@ html: clean-htmls $(HTMLS)
 pdf: clean-pdfs $(PDFS)
 
 %.html: %.adoc
-	bundle exec asciidoctor -o $@ $<
+	asciidoctor -o $@ $<
 
 %.pdf: %.adoc
-	bundle exec asciidoctor-pdf -r asciidoctor-pdf-cjk -o $@ $<
+	asciidoctor-pdf -r asciidoctor-pdf-cjk-kai_gen_gothic -a pdf-style=theme/KaiGenGothicJP-theme.yml -o $@ $<
+	#asciidoctor-pdf -r asciidoctor-pdf-cjk -o $@ $<
+
+download-font:
+	asciidoctor-pdf-cjk-kai_gen_gothic-install
 
 clean: clean-htmls clean-pdfs
 
