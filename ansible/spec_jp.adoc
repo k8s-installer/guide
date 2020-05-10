@@ -7,8 +7,10 @@ Ansible インストーラでデプロイされる Kubernetes クラスタの仕
 ** SELinux が無効になります。
 ** ファイヤウォールはデフォルトで off になります (オプションで on に設定可能)
 ** sysctl 設定が変更されます。
+** コンテナランタイムがインストールされます。
+*** 設定に応じて Docker または containerd がインストールされます。デフォルトは Docker です (ただし RHEL8/CentOS8 では containerd 固定)
 ** 以下のパッケージがインストールされます。
-*** docker, kubeadm, kubectl, cfssl, libselinux-python, lvm2, gnupg2, nfs-utils/nfs-common
+*** kubeadm, kubectl, cfssl, libselinux-python, lvm2, gnupg2, nfs-utils, nfs-common
 * kubeadm を使用して Kubernetes クラスタがデプロイされます。
 ** CA 証明書有効期限は 30 年です (kubeadm デフォルトは 10年)
 ** マスターノードは Schedulable に設定されます (オプションで NoSchedule に設定可能)
