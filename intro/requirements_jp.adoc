@@ -29,9 +29,14 @@ Kubernetes を構成する各マシンについて説明します。
 
 以下いずれかの OS がインストールされたマシンが必要です。
 
-* RedHat Enterprise Linux (RHEL) 7 (7.7以上)
+* RedHat Enterprise Linux (RHEL) 7 (7.7以上), 8
 ** subscription-manager で RedHat サブスクリプションの register を完了させている必要があります。
-* CentOS 7 (7.7以上)
+* CentOS 7 (7.7以上), 8
+* Ubuntu 18.04, 20.04
+
+NOTE: RHEL8 / CentOS8 / Ubuntu は Ansible インストーラのみ対応しています。
+
+WARNING: RHEL8 / CentOS8 を使用する場合、firewalld を併用することはできません。
 
 ==== スペック
 
@@ -49,7 +54,7 @@ Kubernetes を構成する各マシンについて説明します。
 ** パブリックネットワークでもプライベートネットワークでも構いません
 * インターネット接続
 ** Proxyサーバを経由した接続でも構いません。
-** オフラインインストール時はインターネット接続は不要です。
+** オフラインインストール時はインターネット接続は不要です。ただし、その場合でもデフォルトルートは設定されている必要があります。
 
 ==== その他の要件
 

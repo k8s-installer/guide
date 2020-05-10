@@ -1,3 +1,4 @@
+[[ansible_installer]]
 == Ansibleインストーラ
 
 Ansible ベースインストーラを使用してインストールする手順を説明します。

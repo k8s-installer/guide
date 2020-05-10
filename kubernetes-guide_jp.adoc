@@ -1,4 +1,4 @@
-= Kubernetes 構築ガイド: 0.0.7版
+= Kubernetes 構築ガイド: 0.9.0版
 :icons: font
 :encoding: utf-8
 :lang: ja

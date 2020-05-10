@@ -1,3 +1,4 @@
+[[storage]]
 == ストレージ
 
 include::intro_jp.adoc[]

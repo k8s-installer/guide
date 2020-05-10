@@ -1,3 +1,4 @@
+[[private_registry]]
 === プライベートレジストリ
 
 プライベートレジストリをデプロイすることができます。
@@ -40,8 +41,8 @@ registry_pvc_size: 10Gi
 * registry_user: レジストリ認証ユーザ名を指定します。適宜変更してください。
 * registry_password: レジストリ認証パスワードを指定します。適宜変更してください。
 * registry_pvc_storage_class: 使用する PV のストレージクラスを指定します。
-** <<_rook_nfs, Rook / NFS>> を使用する場合は `rook-nfs-share1` を指定してください。
-** <<_rook_ceph, Rook / Ceph>> を使用する場合は `rook-ceph-block` を指定してください。
+** <<rook_nfs, Rook / NFS>> を使用する場合は `rook-nfs-share1` を指定してください。
+** <<rook_ceph, Rook / Ceph>> を使用する場合は `rook-ceph-block` を指定してください。
 * registry_pvc_size: レジストリとして確保する PV のサイズを指定してください。
 
 以下手順でデプロイを行ってください。

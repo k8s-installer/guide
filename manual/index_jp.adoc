@@ -1,9 +1,12 @@
+[[manual_install]]
 == 手動インストール
 
 本章では手動で Kubernetes をインストールする手順ついて説明します。
 
 なお、本項目の手順は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadmのインストール]
 手順に準じています。
+
+NOTE: 本手順は RHEL7 / CentOS7 のみ対応しています。
 
 .インストーラの利用を推奨します
 ****

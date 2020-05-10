@@ -1,3 +1,4 @@
+[[rook_nfs]]
 === Rook / NFS
 
 Rook + NFS (Network File System) を使用することができます。
@@ -8,7 +9,7 @@ NFSサーバは Kubernetes クラスタ上の Pod として起動されます。
 
 詳細は Rook Documentation の https://rook.github.io/docs/rook/master/nfs.html[NFS] を参照してください。
 
-CAUTION: 本設定では特定の1つのノード上のストレージを使用するため、可用性はありません。
+WARNING: 本設定では特定の1つのノード上のストレージを使用するため、可用性はありません。
 
 ==== 設定・デプロイ
 

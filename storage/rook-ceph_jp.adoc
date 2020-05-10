@@ -1,3 +1,4 @@
+[[rook_ceph]]
 === Rook / Ceph
 
 Rook + Ceph を使用することができます。
