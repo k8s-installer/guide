@@ -2,7 +2,7 @@
 
 === インストール手順
 
-インストール手順として以下の3種類があります。Ansibleインストーラの仕様を推奨します。
+インストール手順として以下の3種類があります。Ansibleインストーラの使用を推奨します。
 
 . 手動インストール: https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadm] を使用した手動インストール
 ** 本手順は参考として提示しています。通常は `k8s-installer` インストーラを使った自動インストールを使用してください。

@@ -1,30 +1,29 @@
-== Kubernetes インストールの概要
+== Kubernetes Installation Overview
 
-=== インストール手順
+=== Installation Instructions
 
-インストール手順として以下の3種類があります。Ansibleインストーラの仕様を推奨します。
+There are three different installation procedures. We recommend using the Ansible installer.
 
-. 手動インストール: https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadm] を使用した手動インストール
-** 本手順は参考として提示しています。通常は `k8s-installer` インストーラを使った自動インストールを使用してください。
-** 詳細は <<manual_install>> を参照してください。
-. スクリプトインストーラ: shスクリプトベースのインストーラを使用した自動インストール
-** スタンドアロン・シングルマスター構成をサポートします。
-** 本インストーラは簡易版で、Kubernetes クラスタのみをセットアップします(アプリケーション類はインストールしません)。
-** 詳細は <<script_installer>> を参照してください。
-. Ansibleインストーラ
-** Ansibleを使用したクラスタ一括での自動インストールです。
-** Kubernetes だけでなく、ネットワーキング・ストレージ・アプリケーションのデプロイも実行します。
-** 詳細は <<ansible_installer>>を参照してください。
+. Manual Installation: Manual installation using https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadm]
+** These instructions are provided as a reference only. Normally, you can use the `k8s-installer` installer to perform an automated installation using
+** Please see <<manual_install>> for details.
+. Script Installer: Automatic installation using the sh script-based installer
+** Standalone and single-master configurations are supported.
+** This installer is a simplified version and only sets up the Kubernetes cluster (no applications are installed).
+** See <<script_installer>> for details.
+. Ansible installer.
+** Automatic cluster batch installation using Ansible.
+** Deploys networking, storage, and applications as well as Kubernetes.
+** See <<ansible_installer>> for more information.
 
-また、スクリプトインストーラ・Ansibleインストーラでは、オフラインインストールにも対応しています。
-オフラインインストールでは、Internetに接続されたマシンでインストールに必要なファイルをすべて取得しておき、
-これをUSBメモリ・ハードディスクなどを使用してインストール先の環境に転送してインストールします。
+The script installer and Ansible installer also supports offline installation.
+In offline installation, all the files required for the installation are obtained on a machine connected to the Internet,
+and then transferred to the target machines using a USB memory stick or hard disk.
 
-NOTE: RHEL8 / CentOS8 / Ubuntu は Ansible インストーラのみ対応しています。
+NOTE: Only the ansible installer is suppported for RHEL8 / CentOS8 / Ubuntu.
 
-=== インストーラ
+=== The installers
 
-スクリプトインストーラ・Ansibleインストーラは、 https://github.com/k8s-installer/k8s-installer[k8s-installer]
-に含まれています。
+The scrip installer and ansible installer is included with https://github.com/k8s-installer/k8s-installer[k8s-installer].
 
-https://github.com/k8s-installer/k8s-installer/releases からダウンロードしてください。
+You can download them from https://github.com/k8s-installer/k8s-installer/releases

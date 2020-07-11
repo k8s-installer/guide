@@ -1,18 +1,17 @@
-=== 用語集
+=== Glossary
 
 [cols="2,5" options="header"]
 |===
-|用語
-|意味
+|Term
+|Meaning
 
-|マスターノード
-|Kubernetesのマスターノード。
- Kubernetesのマスターサーバ(kube-apiserver, kube-controller-manager, kube-scheduler, etcd) が動作する。
+|Master Node
+|The master node of Kubernetes.
+ A master servers of Kubernetes (kube-apiserver, kube-controller-manager, kube-scheduler, etcd) run on this node.
 
-|ワーカーノード
-|Kubernetesのワーカーノード。ワークロードを実行するためのノード。
+|Worker Node
+|A worker node of Kubernetes. A node to run workloads.
 
 |HA
-|High Availability。HA構成を組む場合はマスターノード3台構成が必要。
-
+|High Availability. 3 master nodes are required for HA cluster.
 |===

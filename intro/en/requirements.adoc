@@ -1,81 +1,86 @@
-== 必要環境 ==
+== Requirements
 
-=== システム構成
+=== System Configuration
 
-Kubernetes をインストールする際のシステム構成としては以下の３通りがあります。
-構成に応じて必要なマシン数が変わってきます。
+There are three system configurations for installing Kubernetes.
+The number of machines required will vary depending on the configuration.
 
-. スタンドアロン: 1台のみの構成
-** 1台のマシンのみを使用し、Kubernetes マスター・ワーカーを同居させる構成です。
-** ワークロードも同一マシン上で動作することになります。
-** 開発環境や検証・デモ用途でのみの利用を推奨します
-. シングルマスター: マスター1台、ワーカー1台以上の構成
-** マスター1台に、複数台のワーカーで構成します。
-** ワークロードはワーカー上で動作します。
-** マスターノードが SPOF になりますので、本番環境での利用は推奨しません。
-. HA構成: マスター3台、ワーカー1台以上の構成
-** マスター3台でHA構成を組む構成です。
-** マスター上で稼働する kube-apiserver に対して負荷分散をする必要があるため、別途 L4 ロードバランサが必要です。
+. Standalone: a configuration with only one machine.
+** Use only one machine and install both Kubernetes master and worker on the machine.
+** The workload will also run on the same machine.
+** Recommended for use in development environments and for verification and demonstration purposes only.
+. Single Master: one master and one or more workers
+** A single master can be configured with multiple workers.
+** The workload runs on the workers.
+** The master node will be a SPOF and is not recommended for use in a production environment.
+. HA configuration: 3 masters and 1 or more workers.
+** HA is configured with three masters.
+** L4 load balancer is required separately because it is necessary to distribute the load to the kube-apiserver running on the master.
 
-HA構成を組む場合は、マスターノードとして最低3台のマシンが必要です。
-またこれに加えてワーカーノードが最低1台、推奨3台以上が必要です。
-ワーカーノードの台数は、実行するワークロードの量によって変わります。
+To create an HA configuration, you need at least three machines as master nodes.
+In addition, you need at least one worker node, and at least three recommended.
+The number of worker nodes depends on the amount of workloads to be executed.
 
-=== 必要マシン
+=== Required machine
 
-Kubernetes を構成する各マシンについて説明します。
+This section describes each of the machines that make up Kubernetes.
+
+The following requirements are almost same as described in
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[Installing kubeadm].
 
 ==== OS
 
-以下いずれかの OS がインストールされたマシンが必要です。
+Machines with one of the following operating systems installed is required:
 
-* RedHat Enterprise Linux (RHEL) 7 (7.7以上), 8
-** subscription-manager で RedHat サブスクリプションの register を完了させている必要があります。
-* CentOS 7 (7.7以上), 8
+* RedHat Enterprise Linux (RHEL) 7 (7.7 or later), 8
+** You must have completed registration of your RedHat subscription using `subscription-manager`.
+* CentOS 7 (7.7 or later), 8
 * Ubuntu 18.04, 20.04
 
-NOTE: RHEL8 / CentOS8 / Ubuntu は Ansible インストーラのみ対応しています。
+NOTE: Only the ansible installer is supported for RHEL8 / CentOS8 / Ubuntu.
 
-WARNING: RHEL8 / CentOS8 を使用する場合、firewalld を併用することはできません。
+WARNING: You can't use firewalld for RHEL8 / CentOS8.
 
-==== スペック
+==== Hardware spec
 
-マシンのスペックとしては以下のものが必要です。
+The machine specs require the following.
 
-* 1台あたり2GB以上のメモリ
-** ただし、2GBの場合アプリ用のスペースはほとんどありません。推奨は16GB以上です。
-* 2コア以上のCPU
+* 2 GB or more of RAM per machine
+** any less will leave little room for your apps)
+* 2 CPUs or more
 
-==== ネットワーク
+==== Network
 
-ネットワークについては以下の要件が必要です。
+For the network, the following requirements are required
 
-* クラスター内のすべてのマシン間で通信可能なネットワーク
-** パブリックネットワークでもプライベートネットワークでも構いません
-* インターネット接続
-** Proxyサーバを経由した接続でも構いません。
-** オフラインインストール時はインターネット接続は不要です。ただし、その場合でもデフォルトルートは設定されている必要があります。
+* Full network connectivity between all machines in the cluster
+** public or private network is fine
+* Internet connectivity
+** A connection through a proxy server is fine.
+** For offline installation, no Internet connection is required. However, the default route must still be configured.
 
-==== その他の要件
+==== Other requirements
 
-* ユニークなhostname、MACアドレス、product_uuidが各ノードに必要
-** hostname は `hostname` コマンドで確認してください。
-** MAC アドレスは `ip link` または `ifconfig -a` で確認してください。
-** product_uuid は `sudo cat /sys/class/dmi/id/product_uuid` で確認してください。
-** 詳細は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadmのインストール]
-の「MACアドレスとproduct_uuidが全てのノードでユニークであることの検証」を参照してください。
-* マシン内の特定のポートがファイヤウォールで開放されていること。
-** 開放するポートの詳細は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[必須ポートの確認] を参照してください。
-** インストーラを使用する場合は、自動的にファイヤウォールの設定が行われます。
-* Swapがオフであること。
-** kubeletが正常に動作するためにはswapは必ずオフでなければなりません。
-** インストーラを使用する場合は、自動的に Swap をオフにします。
+* Unique hostname, MAC address, and product_uuid for every node.
+** The hostname can be checked with the `hostname` command.
+** You can get the MAC address of the network interfaces using the command `ip link` or `ifconfig -a`.
+** The product_uuid can be checked by using the command `sudo cat /sys/class/dmi/id/product_uuid`.
+** For more information, See "Verify the MAC address and product_uuid are unique for every node" section in
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[Installing kubeadm].
+* Certain ports are open on your machines. See here for more details.
+** For more information on the ports to be opened, see "Check required ports" section of
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[Installing kubeadm].
+** If you use the installer, the firewall is automatically configured.
+** If you use the installer, it will automatically configure the firewall for you.
+* Swap disabled.
+** You MUST disable swap in order for the kubelet to work properly.
+** If you use an installer, Swap is automatically turned off.
 
-=== ロードバランサ
+=== Load balancer
 
-HA構成を組む場合は、L4(TCP)レベルのロードバランサが必要です。
+When configuring HA configuration, an L4(TCP) level load balancer is required.
 
-* ロードバランサには DNS 解決可能な FQDN 名が設定されていること
-* L4 レベルの負荷分散を行うこと
-** TCP 6443 番ポートをマスターノード(3台)の TCP 6443番ポートに負荷分散すること
-** TCPコネクションでのヘルスチェックを行うこと
+* The load balancer must have a DNS-resolvable FQDN name.
+* Load balancing at the L4 level
+** Load balancing TCP port 6443 to same ports of the master node (three nodes).
+** Perform health checks on TCP connections.
