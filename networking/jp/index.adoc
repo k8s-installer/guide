@@ -1,5 +1,5 @@
 [[networking]]
 == ネットワーキング
 
-include::firewall_jp.adoc[]
+include::firewall.adoc[]
 include::metallb.adoc[]

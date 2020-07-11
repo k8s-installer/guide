@@ -1,0 +1,18 @@
+=== 用語集
+
+[cols="2,5" options="header"]
+|===
+|用語
+|意味
+
+|マスターノード
+|Kubernetesのマスターノード。
+ Kubernetesのマスターサーバ(kube-apiserver, kube-controller-manager, kube-scheduler, etcd) が動作する。
+
+|ワーカーノード
+|Kubernetesのワーカーノード。ワークロードを実行するためのノード。
+
+|HA
+|High Availability。HA構成を組む場合はマスターノード3台構成が必要。
+
+|===

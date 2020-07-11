@@ -16,6 +16,6 @@ NOTE: 本手順は RHEL7 / CentOS7 のみ対応しています。
 インストーラはここに示す手順を自動的に実行するようになっています。
 ****
 
-include::install-common_jp.adoc[]
+include::install-common.adoc[]
 
-include::install-single_jp.adoc[]
+include::install-single.adoc[]

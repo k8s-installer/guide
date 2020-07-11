@@ -17,31 +17,31 @@ include::changes/index_jp.adoc[]
 :sectnums:
 :sectnumlevels: 4
 
-include::intro/index_jp.adoc[]
+include::intro/jp/index.adoc[]
 
 // 手動インストール
-include::manual/index_jp.adoc[]
+include::manual/jp/index.adoc[]
 
 // スクリプトベースインストーラ
-include::script-install/index_jp.adoc[]
+include::script-install/jp/index.adoc[]
 
 // Ansibleインストーラ
-include::ansible/index_jp.adoc[]
+include::ansible/jp/index.adoc[]
 
 // ネットワーキング
-include::networking/index_jp.adoc[]
+include::networking/jp/index.adoc[]
 
 // ストレージ
-include::storage/index_jp.adoc[]
+include::storage/jp/index.adoc[]
 
 // アプリケーション
-include::apps/index_jp.adoc[]
+include::apps/jp/index.adoc[]
 
 // オフラインインストール
-include::offline/index_jp.adoc[]
+include::offline/jp/index.adoc[]
 
 // アップグレード
-include::upgrade/index_jp.adoc[]
+include::upgrade/jp/index.adoc[]
 
 // 運用
-include::ops/index_jp.adoc[]
+include::ops/jp/index.adoc[]

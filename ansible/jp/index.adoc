@@ -9,12 +9,12 @@ Ansibleインストーラを使う場合は、インストール作業は Ansibl
 
 本手順は `k8s-installer` の ansible ディレクトリで作業してください。
 
-include::spec_jp.adoc[]
+include::spec.adoc[]
 
-include::requirements_jp.adoc[]
+include::requirements.adoc[]
 
-include::configure_jp.adoc[]
+include::configure.adoc[]
 
-include::install_jp.adoc[]
+include::install.adoc[]
 
-include::test_jp.adoc[]
+include::test.adoc[]
