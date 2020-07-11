@@ -12,7 +12,7 @@
 :xrefstyle: full
 
 :sectnums!:
-include::changes/index_jp.adoc[]
+include::changes/jp/index.adoc[]
 
 :sectnums:
 :sectnumlevels: 4
