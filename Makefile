@@ -1,4 +1,4 @@
-SRCS = kubernetes-guide_jp.adoc kubernetes-guide_en.adoc quickstart-standalone_jp.adoc
+SRCS = kubernetes-guide_jp.adoc kubernetes-guide_en.adoc quickstart-standalone_jp.adoc quickstart-standalone_en.adoc
 HTMLS = $(SRCS:%.adoc=%.html)
 PDFS = $(SRCS:%.adoc=%.pdf)
 

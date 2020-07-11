@@ -1,0 +1,75 @@
+= Quick Start Guide to install Kubernetes (Standalone edition): ver 0.1
+:icons: font
+:encoding: utf-8
+:lang: ja
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 4
+:numbered:
+:doctype: book
+//:source-highlighter: pretty
+:source-highlighter: prettify
+:xrefstyle: full
+
+:sectnums:
+:sectnumlevels: 4
+
+== Introduction
+
+This book provides instructions for installing Kubernetes on a single node (for standalone environment).
+A standalone environment can be used for development and evaluation using Kubernetes.
+
+For the installation procedure of cluster environment including production environment,
+link:kubernetes-guide_jp.html[Kubernetes install guide].
+
+== Requirements
+
+Red Hat Enterprise Linux 7 or CentOS 7 is required.
+An Internet connection is also required.
+
+For more details, see "Requirements" section of link:kubernetes-guide_jp.html[Kubernetes install guide].
+
+== Installation Instructions
+
+=== Download the installer
+
+Use `k8s-installer` as an installer.
+
+Download the installer from "Releases" of https://github.com/k8s-installer/k8s-installer.
+
+=== Configuration
+
+Extract the installer and cd to the `script` directory.
+
+Copy config.sample.sh to config.sh as follows.
+
+    $ cp config.sample.sh config.sh config.sh
+
+Only if you need a proxy to connect to the Internet, you need to edit the config.sh with editor.
+Set the URL of the proxy server into `PROXY_URL`, and set hostname/IP addresses do not use proxy server to `NO_PROXY` separated by commas.
+The IP address of this host must be set to `NO_PROXY`.
+
+Example:
+
+```bash
+...
+PROXY_URL=http://proxy.example.com:8080
+NO_PROXY=localhost,127.0.0.1,10.0.1.2
+...
+```
+
+=== Install
+
+Follow the steps below to perform the installation.
+
+```bash
+$ sudo ./install-common.sh
+$ sudo ./install-master-single.sh
+$ ./install-kubeconfig.sh
+$ ./install-cni.sh
+```
+=== Installation check
+
+After the installation is complete, run `kubectl get nodes` to make sure that the node is ready.
+
+Also, run `kubectl get all -n kube-system` and make sure that all the Pods are running normally.
