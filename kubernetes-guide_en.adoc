@@ -1,7 +1,7 @@
 = Kubernetes Installation Guide: ver 0.9.0
 :icons: font
 :encoding: utf-8
-:lang: ja
+:lang: en
 :toc: left
 :toc-title: Index
 :toclevels: 4

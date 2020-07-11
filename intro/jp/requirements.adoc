@@ -25,6 +25,9 @@ HA構成を組む場合は、マスターノードとして最低3台のマシ�
 
 Kubernetes を構成する各マシンについて説明します。
 
+なお、以下の必要環境は https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[kubeadmのインストール]
+に記載されているものとほぼ同等です。
+
 ==== OS
 
 以下いずれかの OS がインストールされたマシンが必要です。
