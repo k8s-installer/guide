@@ -1,0 +1,60 @@
+=== Configuration
+
+Log in to the Ansible node as a working user.
+Extract the installer and perform the following tasks.
+
+==== Inventory file
+
+Copy the `sample/hosts` file to the `inventory/hosts` file and set the information of the node to be installed.
+
+There are three groups, please define the machine in the appropriate group.
+
+* master_first: Specify the first master node.
+* master_secondary: Specify the second or later master nodes in case of HA configuration.
+* worker: Specify the worker nodes.
+
+For single master configuration, set only master_first and worke. (leave master_secondary empty)
+
+In the HA configuration, you need at least three odd-numbered master nodes.
+Specify the first one as master_first and the rest as master_secondary.
+
+Here is an example of how to specify the machine:
+
+    master1 ansible_user=johndoe ansible_host=10.0.1.10 ip=10.0.1.10
+
+* hostname: Specify the hostname at the beginning. The hostname is the Kubernetes node name as it is.
+* ansible_user: Specify the username on the target node to be used for ssh login.
+** You can omit this if it is the same username as the user on the Ansible node.
+* ansible_host: The hostname or IP address to use when connecting with ssh.
+** If it is the same as the host name, it can be omitted.
+* ip: Specify the IP address of the node.
+** Specify an IP address that can communicate directly with other nodes in the cluster. This is the advertized IP address of the kube-apiserver and kubelet.
+** If omitted, the IP address of the interface specified as the default gateway for the remote machine will be used.
+
+==== Define variables
+
+Copy `sample/group_vars/all/*.yml` files to `inventory/group_vars/all/` directory and edit as follows:
+
+* main.yml
+** lb_apiserver_address: In case of HA configuration, set the FQDN name or IP address of the load balancer.
+** pod_subnet: Speccify Pod subnet (CIDR). Normally, no changes are required, but if the IP address conflicts with an existing address, you need to change it.
+* offline.yml
+** offline_install: Set to `yes` If you want to do an offline installation. See <<offline_install>> for details of the offline installation procedure.
+* proxy.yml
+** If your Internet connection needs to go through a proxy, set the `proxy_url` and `proxy_noproxy`.
+* version.yml
+** Specify the version of Kubernetes to install. If not specified, the default value of `k8s-installer` is used.
+* networking.yml
+** Configure the network settings. See <<networking>> for details.
+* storage.yml
+** Configure the storage settings. See <<storage>> for details.
+* registry.yml
+** Configure the private registry settings. See <<private_registry>> for details.
+
+[NOTE]
+====
+If you use a proxy, you must specify the IP address or DNS name of the kube-apiserver in `proxy_noproxy`.
+Specify the value of the master node in the case of a single host configuration, or the value of the load balancer in the case of HA configuration.
+
+If this is not set properly, the master node installation will fail.
+====

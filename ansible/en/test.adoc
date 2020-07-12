@@ -1,0 +1,5 @@
+=== Operation check
+
+Run `kubectl get nodes` on the master node to make sure that all nodes are added and ready.
+
+Also, run `kubectl get all --all-namespaces` on the master node and make sure all the pods are running properly.

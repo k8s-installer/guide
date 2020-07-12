@@ -1,0 +1,48 @@
+=== Install
+
+==== common procedure
+
+Perform the following steps to common pre-process for all nodes.
+This procedure involves offline repository configuration, proxy configuration, installation of necessary packages (including Docker/kubeadm) and
+common configuration process, etc.
+
+    $ ansible-playbook -i inventory/hosts common.yml -K
+
+NOTE: If you don't need a `sudo` password on the machine you are logging into, you can omit the -K (--ask-become-pass) option.
+
+==== Deploying Kubernetes to the first master node
+
+Install the Kubernetes on the first master node by doing the following:
+
+    $ ansible-playbook -i inventory/hosts master-first.yml -K
+
+At this point, Kubernetes will be running as a single node configuration.
+You can verify that some pods are running by logging in to the host and running `kubectl get all --all-namespaces`.
+
+==== Deploy to the second and subsequent master nodes
+
+Join the second and subsequent master nodes to the Kubernetes cluster by doing the following:
+
+    $ ansible-playbook -i inventory/hosts master-secondary.yml -K
+
+==== Deploy to the worker nodes
+
+Join all worker nodes to the Kubernetes cluster by doing the following:
+
+    $ ansible-playbook -i inventory/hosts worker.yml -K
+
+==== Deploy network, storage, and applications
+
+Deploy the network, storage, and applications by doing the following:
+
+    $ ansible-playbook -i inventory/hosts networking.yml -K
+    $ ansible-playbook -i inventory/hosts storage.yml -K
+    $ ansible-playbook -i inventory/hosts apps.yml -K
+
+.How to do all steps at once
+****
+You can also perform all of the above steps at once by following the steps below.
+However, it is usually recommended that you go through them step by step.
+
+    $ ansible-playbook -i inventory/hosts site.yml -K
+****

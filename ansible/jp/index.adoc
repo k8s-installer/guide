@@ -7,7 +7,7 @@ Ansibleインストーラを使う場合は、インストール作業は Ansibl
 以下、本マシンを Ansibleノードと呼びます。
 なお、マスターノード・ワーカーノードのいずれかを Ansibleノードとして兼用しても構いません。
 
-本手順は `k8s-installer` の ansible ディレクトリで作業してください。
+本手順は `k8s-installer` の `ansible` ディレクトリで作業してください。
 
 include::spec.adoc[]
 

@@ -1,0 +1,21 @@
+[[ansible_installer]]
+== Ansible Installer
+
+The following are the steps to install using the Ansible based installer.
+
+When using the Ansible installer, the installation process is carried out on any machine where Ansible is installed.
+We will refer to this machine as "the Ansible node".
+
+You can use any one of the master or the worker node as an Ansible node.
+
+This install procedure should be done in the `ansible` directory of `k8s-installer`.
+
+include::spec.adoc[]
+
+include::requirements.adoc[]
+
+include::configure.adoc[]
+
+include::install.adoc[]
+
+include::test.adoc[]

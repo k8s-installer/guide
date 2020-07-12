@@ -26,7 +26,7 @@ include::manual/jp/index.adoc[]
 include::script-install/jp/index.adoc[]
 
 // Ansibleインストーラ
-include::ansible/jp/index.adoc[]
+include::ansible/en/index.adoc[]
 
 // ネットワーキング
 include::networking/jp/index.adoc[]

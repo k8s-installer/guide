@@ -1,0 +1,30 @@
+=== Specifications
+
+The specifications for the Kubernetes cluster deployed by the Ansible installer are as follows.
+
+* The following settings are made on all nodes.
+** Swap is disabled.
+** SELinux is disabled.
+** Firewall is off by default (optionally set to on)
+** The sysctl settings are changed.
+** The container runtime is installed.
+*** Docker or containerd is installed, depending on the configuration. The default is Docker (but for RHEL8/CentOS8, only contained will be used)
+** The following packages are installed:
+*** kubeadm, kubectl, cfssl, libselinux-python, lvm2, gnupg2, nfs-utils and nfs-common
+* The Kubernetes cluster is deployed using kubeadm.
+** The CA certificate expires in 30 years (kubeadm default is 10 years).
+** The master node will be set to Schedulable (optionally set to NoSchedule)
+* The ~/.kube/config file is installed on the master nodes.
+* The Calico network plugin will be deployed
+* The following is deployed on the Kubernetes cluster, except for the ones marked with (*) will not be deployed by default.
+** Nginx ingress controller
+** MetalLB (*)
+** rook-nfs (*)
+** rook-ceph (*)
+** storageclass default configuration (*)
+** metrics-server
+** docker registry (*)
+
+Please refer the
+https://github.com/k8s-installer/k8s-installer/blob/develop/ansible/design/sequence.md[k8s-installer sequence]
+for the entire install sequence.
