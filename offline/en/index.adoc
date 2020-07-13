@@ -1,0 +1,72 @@
+[[offline_install]]
+== Offline Installation
+
+=== Overview
+
+In offline installation, all the files required for the installation are obtained on a machine connected to the Internet,
+and then transferred to the target machine using a USB memory or hard disk.
+
+The procedure for offline installation is as follows:
+
+1. On a machine connected to the Internet, use the script to acquire files to required to installation.
+** This will retrieve the RPM file of Docker/Kubeadm/Kubelet, container image files, etc.
+** The file `k8s-offline-files.tar.gz` will be generated contains which contains all these files.
+2. Transfer this file to the target machine using some means (USB memory, hard disk, VPN, etc.).
+3. Use the installer to run the installation.
+
+=== Generating an offline installation file
+
+This section describes the process of generating an offline installation file.
+
+==== Requirements
+
+* The machines that are connected to the Internet. The machine must have the same operating system installed as the machine comprising the Kubernetes cluster.
+
+The following steps must be performed on the above machine.
+
+==== Preparation
+
+If you are using RHEL 7, you must enable the `rhel-7-server-extras-rpms` repository.
+
+    $ subscription-manager repos --enable=rhel-7-server-extras-rpms
+
+==== Proxy configuration
+
+If your Internet connection needs to go through a proxy server, you need to set up proxy settings beforehand.
+
+You can add the proxy settings to `config.sh` and execute `sudo . /setup-proxy.sh` to configure following settings.
+
+===== yum
+
+Add a line `proxy=http://proxy.example.com` in /etc/yum.conf to specify your proxy server.
+
+===== Docker
+
+Create `/etc/systemd/system/docker.service.d/http-proxy.conf` like as following, and reboot docker.
+
+    [Service]
+    Environment="HTTP_PROXY=http://proxy.example.com:8080" "HTTPS_PROXY=http://proxy.example.com:8080" "NO_PROXY=localhost,127.0.0.1,..."
+
+==== Generating an offline installation file
+
+Log in with user with have sudo privileges.
+
+Follow these steps to generate an offline installation file.
+
+    $ sudo ./generate-offline.sh
+
+Offline install file is generated as `k8s-offline-files.tar.gz` file.
+
+=== Use with script based installer
+
+Place `k8s-offline-files.tar.gz` in the script based installer directory.
+
+Change `OFFLINE_INSTALL=` value to `yes` in `config.sh`.
+When you run the installation in this state, an offline installation will be performed.
+
+=== Ansible installer
+
+Extract `k8s-offline-files.tar.gz` file in the Ansible installer directory.
+
+Change `offline_install` variable to `yes` in `inventory/group_vars/all/offline.yml` file.
+When you run the installation in this state, an offline installation will be performed.
