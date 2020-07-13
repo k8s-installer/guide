@@ -1,0 +1,20 @@
+[[manual_install]]
+== Manual installation
+
+This chapter describes the steps to install Kubernetes manually.
+
+The procedures of this chapter are base on https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[Installing kubeadm]
+
+NOTE: This procedure is only supported on RHEL7 / CentOS7.
+
+.The Ansible installer is recommended
+****
+Manual installation instructions are shown **for reference only**.
+
+Normally, you should use an installer (recommended by the Ansible installer) to perform an automated installation.
+The installer is designed to automatically perform the steps shown here.
+****
+
+include::install-common.adoc[]
+
+include::install-single.adoc[]

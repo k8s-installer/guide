@@ -20,7 +20,7 @@ include::changes/en/index.adoc[]
 include::intro/en/index.adoc[]
 
 // 手動インストール
-include::manual/jp/index.adoc[]
+include::manual/en/index.adoc[]
 
 // スクリプトベースインストーラ
 include::script-install/en/index.adoc[]

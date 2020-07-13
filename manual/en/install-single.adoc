@@ -1,0 +1,85 @@
+=== Installing single master configuration
+
+Here are the installation steps for a single master configuration.
+
+==== Master Node Installation
+
+Install the Kubernetes control plane on the master node.
+
+----
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+----
+
+The network address (CIDR) for the pod is 192.168.0.0/16.
+If there is a conflict with your current address, you may need to change it accordingly.
+
+The installation takes a few minutes. You should see a log on your screen that looks like this.
+
+----
+...
+[bootstraptoken] creating the "cluster-info" ConfigMap in the "kube-public" namespace
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a Pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  /docs/concepts/cluster-administration/addons/
+
+You can now join any number of machines by running the following on each node
+as root:
+
+  kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+----
+
+The message `kubadm join...' shown at the end of the above should be saved (to file etc).
+The `kubeadm join...` procedure is necessary for worker nodes to join the Kubernetes cluster.
+
+Follow the above instructions to create ~/.kube/config.
+
+----
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+----
+
+Make sure you can connect to your Kubernetes cluster successfully by following these steps.
+
+----
+kubectl cluster-info
+----
+
+==== Network add-on
+
+Install the Pod Network Add-on. This procedure uses https://www.projectcalico.org/[Calico].
+
+Please install Calico by following the steps below.
+
+ kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+
+==== Scheduling Settings
+
+Change the master node to be schedulable only in a standalone configuration.
+Failure to do so prevents workloads from running on the master node.
+
+ kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
+
+=== Join worker nodes
+
+Join the worker nodes to your Kubernetes cluster by doing the following on each worker node.
+
+ kubeadm join --token <token> <control-plane-host>:<control-plane-port> --discovery-token-ca-cert-hash sha256:<hash>
+
+The argument for `kubeadm join` should be the one shown on the master node installation.
+
+If you forget the contents of the `kubeadm join` or the token has become invalid after 24 hours,
+you can regenerate the token and perform the following steps on the master node.
+
+ kubeadm token create --print-join-command

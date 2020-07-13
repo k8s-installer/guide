@@ -1,0 +1,129 @@
+=== Common proceure
+
+This section describes the common steps that must be performed prior to installing Kubernetes.
+This procedure must be performed on all machines, no matter which configuration you use.
+
+NOTE: All of these steps must be performed with root privileges. Execute `sudo -i` and then execute it.
+
+==== Proxy configuration
+
+If you need to connect to the Internet via a proxy server, you need to do the following.
+
+===== Yum
+
+Add following line to `/etc/yum.conf`
+
+ proxy={PROXY_URL}
+
+Set proxy server URL to {PROXY_URL} in `http://[proxy_hostname]:[proxy_port]` format.
+
+===== Docker
+
+Create `/etc/systemd/system/docker.service.d/http-proxy.conf` file as:
+
+----
+mkdir -p /etc/systemd/system/docker.service.d
+
+cat <<EOF > /etc/systemd/system/docker.service.d/http-proxy.conf
+[Service]
+Environment="HTTP_PROXY={PROXY_URL}" "HTTPS_PROXY={PROXY_URL}" "NO_PROXY=127.0.0.1,localhost"
+EOF
+----
+
+==== Firewall
+
+You must disable the firewall, or open all of the Inbound TCP ports listed below.
+For more information on the ports to be opened, see https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[Check required ports].
+
+* Master nodes
+** 6443
+** 2379-2380
+** 10250-10252
+* Worker nodes
+** 10250
+** 30000-32767
+
+The steps to open ports are as follows:
+
+----
+# for master node
+firewall-cmd --add-port=6443/tcp --permanent
+firewall-cmd --add-port=2379-2380/tcp --permanent
+firewall-cmd --add-port=10250-10252/tcp --permanent
+firewall-cmd --reload
+
+# for worker-node
+firewall-cmd --add-port=10250tcp --permanent
+firewall-cmd --add-port=30000-32767/tcp --permanent
+firewall-cmd --reload
+----
+
+==== Installing the Docker Container Runtime
+
+Use the RHEL7/CentOS7 standard Docker as the container runtime.
+
+For RHEL7, enable the rhel-7-server-extra-rpms repository.
+
+ subscription-manager repos --enable=rhel-7-server-extras-rpms
+
+Follow the steps below to install and start the docker.
+
+ yum install -y docker
+ systemctl enable --now docker
+
+==== Disble SELinux
+
+Disable SELinux
+
+ setenforce 0
+ sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
+
+==== Disable Swap
+
+If Swap is not disabled, disable it.
+
+ sudo swapoff -a
+
+Also, check `/etc/fstab` and disable the swap setting.
+Here's an example.
+
+ sed -i 's/^\([^#].* swap .*\)$/#\1/' /etc/fstab
+
+==== Change sysconfig configuration
+
+Modify sysctl settings to enable bridge the network.
+
+----
+cat <<EOF > /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sysctl --system
+----
+
+==== Insall kubeadm / kubelet / kubectl
+
+Install kubeadm / kubelet / kubectl and start kubelet.
+
+----
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
+yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+
+systemctl enable --now kubelet
+----
+
+Lock version of the kubeadm / kubelet / kubectl to avoid upgrading.
+
+----
+yum install yum-plugin-versionlock
+yum versionlock add kubeadm kubelet kubectl
+----
