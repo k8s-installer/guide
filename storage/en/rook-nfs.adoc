@@ -1,0 +1,66 @@
+[[rook_nfs]]
+=== Rook / NFS
+
+You can use Rook + NFS (Network File System).
+
+The NFS server is started as a pod on the Kubernetes cluster.
+The NFS server uses local volume on one specific node that you specify, and the NFS server pod is configured to run on this node.
+
+For more information, see https://rook.github.io/docs/rook/master/nfs.html[NFS] of the Rook Documentation.
+
+WARNING: This configuration uses storage on one particular node, so it has no availability.
+
+==== Configuration and Deployment
+
+To use NFS, describe configuration in `inventory/group_vars/all/storage.yml` file.
+For example:
+
+```yaml
+#----------------------------------------------------------
+# rook-nfs config
+#----------------------------------------------------------
+
+# rook-nfs Enabled?
+rook_nfs_enabled: yes
+
+# Hostname hosts NFS PV local volume
+rook_nfs_pv_host: "worker-1"
+
+# NFS local volume size
+#rook_nfs_pv_size: 10Gi
+
+# NFS local volume dir on host
+#rook_nfs_pv_dir: /var/lib/rook-nfs
+```
+
+* rook_nfs_enabled: To enable NFS, set to `yes`.
+* rook_nfs_pv_host: The name of the node where Local Volume PV is created.
+** Specify one of the node names listed in Inventory file.
+** The NFS server storage is allocated on the node you specify, and the NFS server pod also runs on this node.
+** The node must be Schedulable.
+* rook_nfs_pv_size: Size of Local Volume (storage size of the NFS server). Default is 10Gi.
+* rook_nfs_pv_dir: Specify the directory where you want to create the Local Volume. The default is `/var/lib/rook-nfs`.
+
+Follow the steps below to deploy.
+
+    $ ansible-playbook -i inventory/hosts apps.yml --tags=rook-nfs
+
+==== Storage class
+
+A new storage class, `rook-nfs-share1`, has been added for this NFS server.
+
+Here is an example of a Persistent Volume Claim (PVC) to use this storage.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rook-nfs-pv-claim
+spec:
+  storageClassName: rook-nfs-share1
+  accessModes:
+    - ReadWriteMany
+  resources:
+  requests:
+    storage: 100Mi
+```

@@ -32,7 +32,7 @@ include::ansible/en/index.adoc[]
 include::networking/en/index.adoc[]
 
 // ストレージ
-include::storage/jp/index.adoc[]
+include::storage/en/index.adoc[]
 
 // アプリケーション
 include::apps/jp/index.adoc[]

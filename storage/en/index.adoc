@@ -1,5 +1,5 @@
 [[storage]]
-== ストレージ
+== Storage
 
 include::intro.adoc[]
 

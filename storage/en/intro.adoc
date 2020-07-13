@@ -1,0 +1,8 @@
+=== Overview
+
+When you use <<ansible_installer>>, you can use https://rook.io/[Rook] to set up storage.
+
+The following two types are supported.
+
+* https://rook.github.io/docs/rook/master/nfs.html[NFS]
+* https://rook.github.io/docs/rook/master/ceph-quickstart.html[Ceph Storage]

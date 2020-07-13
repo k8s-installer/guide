@@ -1,0 +1,60 @@
+[[rook_ceph]]
+=== Rook / Ceph
+
+You can use `Rook` + `Ceph`.
+
+For more information, see https://rook.github.io/docs/rook/master/ceph-quickstart.html[Ceph Storage Quickstart] of the Rook documentation.
+
+==== Requirements.
+
+The following conditions are required.
+
+* A minimum of three worker nodes are required.
+* You must have an unformatted/unpartitioned raw block device connected to your worker nodes.
+
+https://rook.github.io/docs/rook/master/ ... ceph-prerequisites.html[Ceph Prerequisites] also See also.
+
+See also https://rook.github.io/docs/rook/master/ceph-prerequisites.html[Ceph Prerequisites]
+
+==== Configuration and Deployment
+
+If you use Ceph, describe the configuration in `inventory/group_vars/all/storage.yml` file.
+
+```yaml
+#----------------------------------------------------------
+# rook-ceph config
+#----------------------------------------------------------
+rook_ceph_enabled: yes
+```
+
+Set `rook_ceph_enabled` to `yes`.
+
+Deploy the rook-ceph as follows:
+
+    $ ansible-playbook -i inventory/hosts apps.yml --tags=rook-ceph
+
+Deploying Rook / Ceph takes about 10 minutes. Check the status with `watch kubectl -n rook-ceph get all`. 
+
+==== Storage class
+
+The following storage classes will be added.
+
+* `rook-ceph-block` : block storage (rbd)
+* `rook-cephfs` : Filesystem (cephfs)
+
+Here is an example of a Persistent Volume Claim (PVC) to use this storage class.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rook-ceph-pv-claim
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+  requests:
+    storage: 100Mi
+```
+
