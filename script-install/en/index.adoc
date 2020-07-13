@@ -1,0 +1,73 @@
+[[script_installer]]
+== Script based installer
+
+This document explains how to install using the script based installer.
+The script installer is located in the `script` directory of the `k8s-installer`.
+
+If you use the script installer, you will need to deploy the installer on each machine and perform the installation on each machine.
+
+=== Configuration
+
+Copy `config.sample.sh` to `config.sh` and configure.
+
+* In case of HA configuration:
+** Set DNS name (FQDN) and port number of the load balancer to `LOAD_BALANCER_DNS` and `LOAD_BALANCER_PORT`.
+** The load balancer should be configured to load-balance L4 to all master nodes on the specified ports.
+** For more information, see https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/[Creating Highly Available clusters with kubeadm].
+* If your Internet connection needs to go through a proxy, set the values of `PROXY_URL` and `NO_PROXY`.
+** NO_PROXY must have the IP address or DNS name of kube-apiserver.
+Specify the value of the master node in the case of a single host configuration, or the value of the load balancer in the case of HA configuration.
+If this is not properly configured, the master node installation will fail.
+* If you want to do an offline installation, set `OFFLINE_INSTALL` to `yes`. Details are discussed later.
+
+=== Installing Docker / kubeadm
+
+Install Docker, kubeadm and others.
+
+This procedure must be done on all master and worker nodes.
+
+Log in as a regular user with possible to use sudo (no direct root login).
+Follow these steps to perform the installation:
+
+    $ sudo ./install-common.sh
+
+=== Installing master node
+
+Install Kubernetes master control plane on master node.
+
+Log in to the master node (the first master node in the HA configuration) and perform the following procedures.
+
+    # For single master configuration
+    $ sudo ./install-master-single.sh
+
+    # For HA configuration (the first master node)
+    $ sudo ./install-master-ha.sh
+
+The installation takes a few minutes.
+Please take note that you will see a `kubeadm join` command line on the screen to join worker nodes.
+
+Once the installation is complete, follow these steps to install ~/.kube/config
+
+    $ ./install-kubeconfig.sh
+
+Execute `kubectl cluster-info` and verify that the control plane is operating normally.
+
+Finally, install the calico network add-on.
+
+    $ ./install-cni.sh
+
+=== HA configuration: Installing the rest of the master node
+
+See "Steps for the rest of the control plane nodes" section of
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/[Creating Highly Available clusters with kubeadm]
+for installation instructions for the second and subsequent master nodes in an HA configuration.
+
+=== Installing worker nodes.
+
+Login to each worker node and execute the above obtained `kubeadm join` command with sudo to join the node to the Kubernetes cluster.
+
+=== Confirmation after installation
+
+Run `kubectl get nodes` on the master node to make sure that all nodes are added and ready.
+
+Also, run `kubectl get all -n kube-system` on the master node and make sure that all the pods are running normally.

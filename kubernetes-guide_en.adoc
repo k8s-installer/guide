@@ -23,7 +23,7 @@ include::intro/en/index.adoc[]
 include::manual/jp/index.adoc[]
 
 // スクリプトベースインストーラ
-include::script-install/jp/index.adoc[]
+include::script-install/en/index.adoc[]
 
 // Ansibleインストーラ
 include::ansible/en/index.adoc[]
