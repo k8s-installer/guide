@@ -1,0 +1,7 @@
+== Application
+
+When you use <<ansible_installer>>,  you can deploy some application automatically.
+
+include::registry.adoc[]
+
+

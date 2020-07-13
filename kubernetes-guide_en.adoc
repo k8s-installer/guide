@@ -35,7 +35,7 @@ include::networking/en/index.adoc[]
 include::storage/en/index.adoc[]
 
 // アプリケーション
-include::apps/jp/index.adoc[]
+include::apps/en/index.adoc[]
 
 // オフラインインストール
 include::offline/jp/index.adoc[]

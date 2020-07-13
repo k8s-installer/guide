@@ -1,0 +1,64 @@
+[[private_registry]]
+=== Private Registry
+
+You can deploy a private registry.
+
+https://docs.docker.com/registry/[Docker Registry] is used for private registry.
+
+You need Persistent Volume to store container images.
+If you have Rook / NFS or Rook / Ceph deployment, you can use them.
+
+==== Configuration and Deployment
+
+If you deploy the private registry, put the configuration in `inventory/group_vars/all/registry.yml` file.
+
+```yaml
+# Registry enabled?
+registry_enabled: yes
+
+# Registry type: static-pod or pv
+registry_type: pv
+
+# Auth user
+registry_user: registry
+
+# Auth password
+registry_password: registry
+
+# Registry image version
+#registry_version: 2.7.1
+
+# PVC storage class name
+#registry_pvc_storage_class: rook-nfs-share1  # Default to use rook-nfs
+registry_pvc_storage_class: rook-ceph-block  # Use rook-ceph block storage
+
+# PVC storage size
+registry_pvc_size: 10Gi
+```
+
+* registry_enabled: Enable the registry. Set to `yes`.
+* registry_type: Specify the registry type. Set to `pv`. Default is 'pv'.
+* registry_user: Specify the registry authentication user name. Change it if necessary.
+* registry_password: Specify the registry authentication password. Change it if necessary.
+* registry_pvc_storage_class: Specify the storage class of PV to be used.
+** If you use <<rook_nfs, Rook / NFS>>, specify `rook-nfs-share-1`.
+** If you use <<rook_ceph, Rook / Ceph>>, specify `rook-ceph-block`.
+* registry_pvc_size: Specify the size of the PV to be allocated as a registry.
+
+Follow the steps below to deploy:
+
+    $ ansible-playbook -i inventory/hosts apps.yml --tags=registry
+
+==== Using private registry
+
+The registry is exported as a NodePort service.
+To find out the port number, follow these steps:
+
+    $ kubectl -n registry get svc
+
+The URL of the registry is `https://[node]:[nodeport]`,
+where `node` is the address/host of one of the nodes, and `nodeport` is the port number of the NodePort identified above.
+
+You can login by the following procedure.
+
+    $ docker login https://[node]:[nodeport]
