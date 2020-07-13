@@ -41,7 +41,7 @@ include::apps/en/index.adoc[]
 include::offline/en/index.adoc[]
 
 // アップグレード
-include::upgrade/jp/index.adoc[]
+include::upgrade/en/index.adoc[]
 
 // 運用
-include::ops/jp/index.adoc[]
+include::ops/en/index.adoc[]

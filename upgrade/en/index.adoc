@@ -1,0 +1,34 @@
+== Upgrading cluster
+
+The steps to upgrade your Kubernetes cluster.
+
+=== Notes
+
+You can only upgrade your Kubernetes cluster to version 0.1 at a time.
+
+For more information, see https://kubernetes.io/docs/setup/release/version-skew-policy/[Kubernetes version and version skew support policy].
+
+=== Ansible installer
+
+If you are using the the Ansible installer, the upgrade can be done automatically.
+
+==== Prepare for offline installation
+
+If you are using an offline installation, you must obtain and extract the offline installation file in advance.
+
+==== Set up version
+
+Change following variables in `inventory/group_vars/all/version.yml` file.
+
+* kube_version: Version of the Kubernetes.
+* kubeadm_version, kubelet_version, kubectl_version: Versions of kubeadm, kubelet, kubectl (RPM version)
+
+==== Performing Upgrades
+
+Follow the steps below to upgrade the master nodes.
+
+    $ ansible-playbook -i inventory/hosts upgrade-master.yml
+
+Follow the steps below to upgrade the worker nodes.
+
+    $ ansible-playbook -i inventory/hosts upgrade-worker.yml
