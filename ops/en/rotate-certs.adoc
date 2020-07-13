@@ -1,37 +1,35 @@
-=== 証明書の更新
+=== Renewal of certificates
 
-Kubernetes のサーバ証明書・クライアント証明書は有効期限が1年となっているため、
-定期的に証明書の更新を行わなければなりません。
+Kubernetes server and client certificates are valid for one year, so you have to renew your certificates periodically.
 
-詳細は https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/[Certificate Management with kubeadm] を参照してください。
+For more information, see https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/[Certificate Management with kubeadm].
 
-==== 証明書の自動更新
+==== Automatic renewal of certificates
 
-Kubernetes のアップグレードを行った際に、kubeadm が自動的に証明書を更新するようになっています。
-Kubernetes は数ヶ月に1度マイナーバージョンアップされるため、
-これに合わせて定期的にアップグレードを行えば証明書期限が切れることはありません。
-(これがセキュリティを維持するためのベストプラクティスです)
+When you upgrade Kubernetes, kubeadm will automatically update your certificates.
+Kubernetes gets a minor upgrade every few months, so if you upgrade regularly in conjunction with this, your certificate will not expire.
+(It is a best practice to upgrade your cluster frequently in order to stay secure.)
 
-==== 証明書有効期限の確認
+==== Verification of Certificate Expiration Date
 
-各マスターノードで以下手順を実行することで有効期限を確認できます。
+You can check the expiration date by performing the following procedure on each master node.
 
     $ sudo kubeadm alpha certs check-expiration
 
-==== 証明書の手動更新
+==== Manual certificate update
 
-以下手順で証明書を手動更新することができます。
+You can manually update your certificate by following the steps below.
 
-===== Ansible インストーラを使用している場合
+===== If you are using the Ansible installer
 
-`renew-server-certs` playbook を使用して、全マスターノードの証明書を手動更新できます。
-全証明書が有効期限1年で再生成されます。
+You can use the `renew-server-certs` playbook to manually update the certificates on all master nodes.
+All certificates are regenerated with an expiration date of one year.
 
     $ ansible-playbook -i inventory/hosts renew-server-certs.yml
 
-===== スクリプトインストーラを使用している場合
+===== If you are using the script based installer
 
-全マスターノード上で、それぞれ以下手順を実行してください。
+Perform the following procedures on all master nodes.
 
     $ sudo kubeadm alpha certs renew all
     $ sudo /bin/rm /var/lib/kubelet/kubelet.crt
