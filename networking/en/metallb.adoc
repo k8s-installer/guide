@@ -1,0 +1,21 @@
+=== MetalLB
+
+You can use MetalLB as an implementation of the LoadBalancer.
+
+See https://metallb.universe.tf/[MetalLB] for details.
+There are two operating modes for MetalLB, L2 mode and BGP mode, but this installer supports only L2 mode.
+
+If you want to use MetalLB, you need to change the file `inventory/group_vars/all/networking.yml` file with editor and add configurations.
+An example configuration is shown below.
+
+```yaml
+# Enable MetalLB?
+metallb_enabled: yes
+
+# MetalLB IP address pool range
+metallb_ip_range: 192.168.1.200-192.168.1.210
+```
+
+* metallb_enabled: set to `yes`
+* metallb_ip_range: IP address pool range to be used for LoadBalancer.
+You must specify the free IP addresses on the subnet to which each node is connected.

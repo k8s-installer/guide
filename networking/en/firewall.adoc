@@ -1,0 +1,8 @@
+=== Firewall
+
+The firewall (firewalld) on each node is disabled by default.
+
+If you want to enable it, set the `firwall_enabled` variable to `yes` in the `inventory/group_vars/all/networking.yml` file.
+
+NOTE: On RHEL 8 / CentOS 8, the firewall must be disabled.
+If you enable it, it interferes with the `kube-proxy` nftables configuration and won't work properly. 
