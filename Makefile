@@ -2,6 +2,9 @@ SRCS = kubernetes-guide_jp.adoc kubernetes-guide_en.adoc quickstart-standalone_j
 HTMLS = $(SRCS:%.adoc=%.html)
 PDFS = $(SRCS:%.adoc=%.pdf)
 
+#BUNDLE_EXEC =
+BUNDLE_EXEC = bundle exec
+
 all: html
 
 html: clean-htmls $(HTMLS)
@@ -9,14 +12,14 @@ html: clean-htmls $(HTMLS)
 pdf: clean-pdfs $(PDFS)
 
 %.html: %.adoc
-	asciidoctor -o $@ $<
+	$(BUNDLE_EXEC) asciidoctor -o $@ $<
 
 %.pdf: %.adoc
-	asciidoctor-pdf -r asciidoctor-pdf-cjk-kai_gen_gothic -a pdf-style=theme/KaiGenGothicJP-theme.yml -o $@ $<
+	$(BUNDLE_EXEC) asciidoctor-pdf -r asciidoctor-pdf-cjk-kai_gen_gothic -a pdf-style=theme/KaiGenGothicJP-theme.yml -o $@ $<
 	#asciidoctor-pdf -r asciidoctor-pdf-cjk -o $@ $<
 
 download-font:
-	asciidoctor-pdf-cjk-kai_gen_gothic-install
+	$(BUNDLE_EXEC) asciidoctor-pdf-cjk-kai_gen_gothic-install
 
 clean: clean-htmls clean-pdfs
 
