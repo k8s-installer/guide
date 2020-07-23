@@ -16,6 +16,7 @@ Ansible インストーラでデプロイされる Kubernetes クラスタの仕
 ** マスターノードは Schedulable に設定されます (オプションで NoSchedule に設定可能)
 * マスターノード上に ~/.kube/config が設定されます。
 * Calico network plugin がデプロイされます。
+** Overlay network (IPIP/VXLAN) は使用しません。全ノードは同一の L2 ネットワークに接続されている必要があります。
 * Kubernetes クラスタ上に以下のものがデプロイされます。ただし (*) が付与されているものはデフォルトではデプロイされません。
 ** Nginx ingress controller
 ** MetalLB (*)

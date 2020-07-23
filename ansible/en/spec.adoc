@@ -16,6 +16,7 @@ The specifications for the Kubernetes cluster deployed by the Ansible installer 
 ** The master node will be set to Schedulable (optionally set to NoSchedule)
 * The ~/.kube/config file is installed on the master nodes.
 * The Calico network plugin will be deployed
+** Overlay network (IPIP/VXLAN) is not used. All nodes must be connected to the same L2 network.
 * The following is deployed on the Kubernetes cluster, except for the ones marked with (*) will not be deployed by default.
 ** Nginx ingress controller
 ** MetalLB (*)

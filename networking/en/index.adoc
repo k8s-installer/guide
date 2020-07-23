@@ -3,4 +3,6 @@
 
 include::firewall.adoc[]
 
+include::calico.adoc[]
+
 include::metallb.adoc[]

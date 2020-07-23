@@ -1,0 +1,12 @@
+[[calico]]
+=== Calico
+
+https://www.projectcalico.org/[Calico] is installed as CNI Plugin.
+
+Overlay network (IPIP/VXLAN) is not used by default.
+All nodes must be connected to the same L2 network.
+
+If you want to change the configuration, edit the file `inventory/group_vars/all/networking.yml` with your editor and add your own settings.
+
+* If you want to use IPIP, set `calico_ipv4pool_ipip` to `Always`.
+* If you use VXLAN, set `calico_ipv4pool_vxlan` to `Always`.
