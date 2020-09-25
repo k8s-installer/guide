@@ -8,7 +8,7 @@ Ansible インストーラでデプロイされる Kubernetes クラスタの仕
 ** ファイヤウォールはデフォルトで off になります (オプションで on に設定可能)
 ** sysctl 設定が変更されます。
 ** コンテナランタイムがインストールされます。
-*** 設定に応じて Docker または containerd がインストールされます。デフォルトは Docker です (ただし RHEL8/CentOS8 では containerd 固定)
+*** 設定に応じて Docker または containerd がインストールされます。デフォルトは Docker です。
 ** 以下のパッケージがインストールされます。
 *** kubeadm, kubectl, cfssl, libselinux-python, lvm2, gnupg2, nfs-utils, nfs-common
 * kubeadm を使用して Kubernetes クラスタがデプロイされます。

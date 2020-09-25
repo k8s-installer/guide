@@ -8,7 +8,7 @@ The specifications for the Kubernetes cluster deployed by the Ansible installer 
 ** Firewall is off by default (optionally set to on)
 ** The sysctl settings are changed.
 ** The container runtime is installed.
-*** Docker or containerd is installed, depending on the configuration. The default is Docker (but for RHEL8/CentOS8, only contained will be used)
+*** Docker or containerd is installed, depending on the configuration. The default is Docker.
 ** The following packages are installed:
 *** kubeadm, kubectl, cfssl, libselinux-python, lvm2, gnupg2, nfs-utils and nfs-common
 * The Kubernetes cluster is deployed using kubeadm.
